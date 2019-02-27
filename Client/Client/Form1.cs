@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +20,9 @@ namespace Client
         public Form1()
         {
             InitializeComponent();
+
+            Directory.CreateDirectory(Path.GetTempPath() + "\\RGBoys\\Client");
+
             screens = Screen.AllScreens;
             int i = 0;
             foreach (var screen in screens)
@@ -36,7 +42,25 @@ namespace Client
             memoryImage = new Bitmap(prevScreen.Bounds.Width, prevScreen.Bounds.Height, myGraphics);
             Graphics memoryGraphics = Graphics.FromImage(memoryImage);
             memoryGraphics.CopyFromScreen(prevScreen.Bounds.Left, prevScreen.Bounds.Top, prevScreen.Bounds.Right, prevScreen.Bounds.Bottom, prevScreen.Bounds.Size);
+
+            Console.WriteLine(Path.GetTempPath());
+            string path = @"" + Path.GetTempPath() + "\\RGBoys\\Client\\temp.png";
             
+            using (MemoryStream memory = new MemoryStream())
+            {
+                using (FileStream fs = new FileStream(path, FileMode.Create, FileAccess.ReadWrite))
+                {
+                    memoryImage.Save(memory, ImageFormat.Jpeg);
+                    byte[] bytes = memory.ToArray();
+                    fs.Write(bytes, 0, bytes.Length);
+                }
+            }
+            
+
+            Process photoViewer = new Process();
+            photoViewer.StartInfo.FileName = path;
+            photoViewer.StartInfo.Arguments = path;
+            photoViewer.Start();
         }
 
         private void combo_monitor_SelectedIndexChanged(object sender, EventArgs e)
