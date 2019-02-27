@@ -41,7 +41,7 @@ namespace Client
             Size s = prevScreen.Bounds.Size;
             memoryImage = new Bitmap(prevScreen.Bounds.Width, prevScreen.Bounds.Height, myGraphics);
             Graphics memoryGraphics = Graphics.FromImage(memoryImage);
-            memoryGraphics.CopyFromScreen(prevScreen.Bounds.Left, prevScreen.Bounds.Top, prevScreen.Bounds.Right, prevScreen.Bounds.Bottom, prevScreen.Bounds.Size);
+            memoryGraphics.CopyFromScreen(prevScreen.Bounds.Left, prevScreen.Bounds.Top, 0,0, prevScreen.Bounds.Size, CopyPixelOperation.SourceCopy);
 
             Console.WriteLine(Path.GetTempPath());
             string path = @"" + Path.GetTempPath() + "\\RGBoys\\Client\\temp.png";
