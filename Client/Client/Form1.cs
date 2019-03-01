@@ -22,8 +22,10 @@ namespace Client
             InitializeComponent();
 
             Directory.CreateDirectory(Path.GetTempPath() + "\\RGBoys\\Client");
-
             screens = Screen.AllScreens;
+
+            Array.Sort(screens, delegate (Screen x, Screen y) { return x.DeviceName.CompareTo(y.DeviceName); });
+
             int i = 0;
             foreach (var screen in screens)
             {
@@ -66,6 +68,38 @@ namespace Client
         private void combo_monitor_SelectedIndexChanged(object sender, EventArgs e)
         {
             prevScreen = screens[combo_monitor.SelectedIndex];
+        }
+
+        //Executes python scripts
+        private void button_start_Click(object sender, EventArgs e)
+        {
+            var psi = new ProcessStartInfo();
+            psi.FileName = @"C:\Users\lichc\AppData\Local\Programs\Python\Python37\python.exe";
+
+            var script = @"C:\Users\lichc\Desktop\ReactiveRGB\Reactive-RGB\Python\ClientCapture\clientcapture.py";
+            int startX = 0;
+            int startY = 0;
+            int width = 200;
+            int height = 200;
+            int monitor = combo_monitor.SelectedIndex;
+            psi.Arguments = $"\"{script}\" \"{startX}\" \"{startY}\" \"{width}\" \"{height}\" \"{monitor}\"";
+
+            psi.UseShellExecute = false;
+            psi.CreateNoWindow = true;
+            psi.RedirectStandardOutput = true;
+            psi.RedirectStandardError = true;
+
+            var errors = "";
+            var results = "";
+
+            using (var process = Process.Start(psi))
+            {
+                errors = process.StandardError.ReadToEnd();
+                results = process.StandardOutput.ReadToEnd();
+            }
+
+            Console.WriteLine(errors);
+            Console.WriteLine(results);
         }
     }
 }

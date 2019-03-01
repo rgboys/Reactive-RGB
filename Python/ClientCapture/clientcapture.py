@@ -26,9 +26,8 @@ import cv2
 # t.show()
 # ##############################################################
 
-start = time.time()
+#start = time.time()
 with mss() as sct:
-	
 	X_COORD = int(sys.argv[1])
 	Y_COORD = int(sys.argv[2])
 	WIDTH = int(sys.argv[3])
@@ -45,16 +44,18 @@ with mss() as sct:
         "mon": MONITOR_NUMBER
     }
 	
-	im = sct.grab(monitor)
+	# Continuously loop until process is killed
+	while True:
+		im = sct.grab(monitor)
 
-	raw = MSSTools.to_png(im.rgb, im.size)
-	nparr = np.frombuffer(raw, np.uint8)
-	cimg = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-	avg_per_row = np.average(cimg, axis=0)
-	avg = np.average(avg_per_row, axis=0)	
-	print('Runtime: ' + str(time.time()-start))
-	print('Average RGB: ' + str(avg))
+		raw = MSSTools.to_png(im.rgb, im.size)
+		nparr = np.frombuffer(raw, np.uint8)
+		cimg = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+		avg_per_row = np.average(cimg, axis=0)
+		avg = np.average(avg_per_row, axis=0)	
+		#print('Runtime: ' + str(time.time()-start))
+		print('Average RGB: ' + str(avg))
 
 
-	b = Image.open(io.BytesIO(raw))
-	b.show()
+	#b = Image.open(io.BytesIO(raw))
+	#b.show()
