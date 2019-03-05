@@ -35,13 +35,14 @@ for i in range(int(10*44100/1024)): #go for a few seconds
     colorBars = int(50*peak/2**10) % 11 
     bars="#"*colorBars
     # Stuff below is too slow right now 
-    # for i in range(10): 
-    #     if(colorBars > i):
-    #         rectangles[i].setFill(colors[i])
-    #     else:
-    #         rectangles[i].setFill("Black")
     print("%04d %05d %s"%(i,peak,bars))
-
+    for i in range(10): 
+        if(colorBars > i):
+            # rectangles[i].setFill(colors[i])
+            print("Colorful")
+        else:
+            # rectangles[i].setFill("Black")
+            print("Black no color")
 stream.stop_stream()
 stream.close()
 p.terminate()
