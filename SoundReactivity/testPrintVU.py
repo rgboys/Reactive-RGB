@@ -1,4 +1,5 @@
 import pyaudio
+import aubio
 import numpy as np
 from graphics import *
 
@@ -37,7 +38,7 @@ for i in range(int(TIME_IN_SECS*44100/1024)): #go for a few seconds
     data = np.frombuffer(stream.read(CHUNK, exception_on_overflow = False),dtype=np.int16)
     peak=np.average(np.abs(data))*2
     # colorBars = int(50*peak/2**10) % (1+SIMULATED_SQUARES)
-    colorBars = int(50*peak/2**10)223
+    colorBars = int(50*peak/2**10)
     bars="#"*colorBars
     # Stuff below is too slow right now 
     print("%04d %05d %s"%(i,peak,bars))
