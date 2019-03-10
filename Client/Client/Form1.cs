@@ -17,9 +17,14 @@ namespace Client
     {
         private Screen prevScreen;
         private Screen[] screens;
+        
+
         public Form1()
         {
             InitializeComponent();
+
+            SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+            this.BackColor = Color.Transparent;
 
             Directory.CreateDirectory(Path.GetTempPath() + "\\RGBoys\\Client");
             screens = Screen.AllScreens;
@@ -42,7 +47,7 @@ namespace Client
             var psi = new ProcessStartInfo();
             psi.FileName = @"C:\Users\lichc\AppData\Local\Programs\Python\Python37\python.exe";
 
-            var script = @"C:\Users\lichc\Desktop\ReactiveRGB\Reactive-RGB\Python\ClientCapture\clientcapture.py";
+            var script = @"C:\Users\lichc\Desktop\RGBoys\Reactive - RGB\Python\ClientCapture\clientcapture.py";
             int monitorIndex = combo_monitor.SelectedIndex+1;
 
             psi.Arguments = $"\"{script}\" \"{"0"}\" \"{monitorIndex}\"";
@@ -70,36 +75,45 @@ namespace Client
             prevScreen = screens[combo_monitor.SelectedIndex];
         }
 
+        bool button_startIndicator = false;
+
         //Executes python scripts
         private void button_start_Click(object sender, EventArgs e)
         {
-            var psi = new ProcessStartInfo();
-            psi.FileName = @"C:\Users\lichc\AppData\Local\Programs\Python\Python37\python.exe";
-
-            var script = @"C:\Users\lichc\Desktop\ReactiveRGB\Reactive-RGB\Python\ClientCapture\clientcapture.py";
-            int startX = 0;
-            int startY = 0;
-            int width = 200;
-            int height = 200;
-            int monitor = combo_monitor.SelectedIndex;
-            psi.Arguments = $"\"{script}\" \"{"1"}\" \"{startX}\" \"{startY}\" \"{width}\" \"{height}\" \"{monitor}\"";
-
-            psi.UseShellExecute = false;
-            psi.CreateNoWindow = true;
-            psi.RedirectStandardOutput = true;
-            psi.RedirectStandardError = true;
-
-            var errors = "";
-            var results = "";
-
-            using (var process = Process.Start(psi))
+            button_startIndicator = !button_startIndicator;
+            if(button_startIndicator)
             {
-                errors = process.StandardError.ReadToEnd();
-                results = process.StandardOutput.ReadToEnd();
-            }
+                int numThreads = Int32.Parse(numeric_threads.Value.ToString());
 
-            Console.WriteLine(errors);
-            Console.WriteLine(results);
+                //Width per section
+                int bottom_widthPerSection = (prevScreen.Bounds.Width / Int32.Parse(numeric_horizontalLEDs.Value.ToString()));
+                int left_widthPerSection = (prevScreen.Bounds.Height / Int32.Parse(numeric_verticalLEDs.Value.ToString()));
+
+                //Number of sections
+                int bottom_numSections = prevScreen.Bounds.Width / bottom_widthPerSection;
+                int left_numSections = prevScreen.Bounds.Height / left_widthPerSection;
+
+                int inc = 0;
+
+                List<Section> sections = new List<Section>();
+                for (int i = 0; i < bottom_numSections; i++)
+                {
+                    sections.Add(new Section(inc, 100, false));
+                    inc += bottom_widthPerSection;
+                }
+                inc = 0;
+                for (int i = 0; i < left_numSections; i++)
+                {
+                    sections.Add(new Section(100, inc, true));
+                    inc += left_widthPerSection;
+                }
+                LEDSimulate dial = new LEDSimulate(sections, combo_monitor.SelectedIndex);
+                dial.Show();
+            }
+            else
+            {
+                //Kill all the threads
+            }
         }
     }
 }

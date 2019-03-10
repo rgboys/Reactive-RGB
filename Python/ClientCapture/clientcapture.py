@@ -17,7 +17,9 @@ import cv2
 # arg[6] = Height of screen to capture
 #
 # Example execution for the top left of Monitor 1, with a 200x200 box:
-# py .\clientcapture.py 0 0 200 200 1
+# py .\clientcapture.py 1 1 0 0 200 200
+# Example of section for testing monitor 1 (with open image)
+# py .\clientcapture.py 0 1
 # ##############################################################
 
 
@@ -29,7 +31,7 @@ import cv2
 
 #start = time.time()
 with mss() as sct:
-	print(sys.argv)
+	#print(sys.argv)
 	if sys.argv[1] == '0':
 		MONITOR_NUMBER = int(sys.argv[2])
 		mon = sct.monitors[MONITOR_NUMBER]
@@ -72,4 +74,9 @@ with mss() as sct:
 			avg_per_row = np.average(cimg, axis=0)
 			avg = np.average(avg_per_row, axis=0)	
 			#print('Runtime: ' + str(time.time()-start))
-			print('Average RGB: ' + str(avg))
+			#time.sleep(1)
+			print(str(int(avg[2])) + ' ' + str(int(avg[1])) + ' ' + str(int(avg[0])))
+			sys.stdout.flush()
+			#b = Image.open(io.BytesIO(raw))
+			#b.show()
+			#break
