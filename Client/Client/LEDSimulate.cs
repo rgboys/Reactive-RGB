@@ -66,12 +66,13 @@ namespace Client
         static void proc_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             Console.WriteLine(e.Data);
-            string[] rgb = e.Data.Split(' ');
-            int r = Int32.Parse(rgb[0]);
-            int g = Int32.Parse(rgb[1]);
-            int b = Int32.Parse(rgb[2]);
+            string[] argb = e.Data.Split(' ');
+            int a = Int32.Parse(rgb[0]);
+            int r = Int32.Parse(rgb[1]);
+            int g = Int32.Parse(rgb[2]);
+            int b = Int32.Parse(rgb[3]);
             //Update
-            instance.BackColor = Color.FromArgb(r, g, b);
+            instance.BackColor = Color.FromArgb(a, r, g, b);
         }
 
 
