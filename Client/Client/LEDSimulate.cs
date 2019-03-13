@@ -28,8 +28,8 @@ namespace Client
                 psi.FileName = @"C:\Users\lichc\AppData\Local\Programs\Python\Python37\python.exe";
 
                 var script = @"C:\Users\lichc\Desktop\RGBoys\Reactive-RGB\Python\ClientCapture\clientcapture.py";
-                int startX = 0;
-                int startY = 0;
+                int startX = 450;
+                int startY = 400;
                 int width = 200;
                 int height = 200;
                 int monitor = mon + 1;
