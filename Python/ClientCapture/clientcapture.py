@@ -50,9 +50,11 @@ def readSoundOutputAlpha():
 	data = np.frombuffer(stream.read(CHUNK, exception_on_overflow = False),dtype=np.int16)
 	peak=np.average(np.abs(data))*2
 	# colorBars = int(50*peak/2**10) % (1+SIMULATED_SQUARES)
-	colorBars = int(50*peak/2**10)
+	colorBars = int(3*peak/2**6)
 	# bars="#"*colorBars
 	# print("%05d %s"%(peak,bars))
+	if(colorBars > 255):
+		colorBars = 255
 	return colorBars
 
 with mss() as sct:
