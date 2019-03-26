@@ -15,16 +15,26 @@ namespace Client
     {
         public List<Section> sections;
         public static LEDSimulate instance;
-        
-        public LEDSimulate(string pathScript, string pathPython, List<Section> sections, int mon)
+
+        private List<Process> procs;
+
+        //Requires this instance just in case the user closes from the form instead of hitting the 'stop' button on the main form
+        private Form1 formInst;
+
+        public LEDSimulate(string pathScript, string pathPython, Form1 formInst, List<Section> sections, int mon, int numThreads)
         {
             InitializeComponent();
             instance = this;
             this.TransparencyKey = (BackColor);
             this.sections = sections;
+            this.procs = new List<Process>();
+
+            this.formInst = formInst;
+
+            //initialize for all sections
+
             var t = new Task(() =>
             {
-                Console.WriteLine("here");
                 var psi = new ProcessStartInfo();
                 psi.FileName = pathPython;
 
@@ -47,12 +57,13 @@ namespace Client
                 p.StartInfo = psi;
                 p.Start();
 
+                procs.Add(p);
+
                 p.BeginOutputReadLine();
                 p.BeginErrorReadLine();
             });
-
             t.Start();
-            t.Wait();
+            
         }
 
         static void proc_ErrorDataReceived(object sender, DataReceivedEventArgs e)
@@ -63,8 +74,13 @@ namespace Client
 
         static void proc_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            Console.WriteLine(e.Data);
-            if(!string.IsNullOrEmpty(e.Data))
+            //Rather than updating with instance.BackColor, need to change to work with individual sections
+            //In sense, need to know what section we are working with
+            //Perhaps it would be best to initiate py script with section info and have it be part of the output
+            //Come to think, since we need to work with a dynamically changing screen it would not be enough to update by proportion
+            //Doing so would mean screen tearing
+            //UI needs to update as we move the screen and change in size without this function being in charge so we don't overwrite anything and get blank spaces
+            if (!string.IsNullOrEmpty(e.Data))
             {
                 string[] argb = e.Data.Split(' ');
                 int a = Int32.Parse(argb[0]);
@@ -78,7 +94,19 @@ namespace Client
             }
         }
 
-
-
+        //Kill processes
+        private void LEDSimulate_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            foreach(Process p in procs)
+            {
+                p.Kill();
+            }
+            //Flag exsits to determine whether or not the close button was pressed within Form1, or hard closed on this form
+            if (!formInst.button_flag)
+            {
+                formInst.toggleButton();
+            }
+            formInst.button_flag = false;
+        }
     }
 }

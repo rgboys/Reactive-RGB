@@ -21,9 +21,20 @@ namespace Client
         private Screen prevScreen;
         private Screen[] screens;
 
+        private LEDSimulate dial;
+
+        private Form1 formInst;
+
+        //Flag to determine toggling "start" and "stop" text on button, and logic
+        private bool button_startIndicator = false;
+        //Flag to communicate to LEDSimulate that the 'stop' button was pressed on this form, rather than forced closed on the other form
+        public bool button_flag = false;
+
         public Form1()
         {
             InitializeComponent();
+
+            this.formInst = this;
 
             SetStyle(ControlStyles.SupportsTransparentBackColor, true);
             this.BackColor = Color.Transparent;
@@ -77,13 +88,10 @@ namespace Client
             prevScreen = screens[combo_monitor.SelectedIndex];
         }
 
-        bool button_startIndicator = false;
-
-        //Executes python scripts
+        //Computes sections
         private void button_start_Click(object sender, EventArgs e)
         {
-            button_startIndicator = !button_startIndicator;
-            if(button_startIndicator)
+            if(toggleButton())
             {
                 int numThreads = Int32.Parse(numeric_threads.Value.ToString());
 
@@ -109,13 +117,23 @@ namespace Client
                     sections.Add(new Section(100, inc, true));
                     inc += left_widthPerSection;
                 }
-                LEDSimulate dial = new LEDSimulate(pathScript, pathPython, sections, combo_monitor.SelectedIndex);
+
+                dial = new LEDSimulate(pathScript, pathPython, formInst, sections, combo_monitor.SelectedIndex, numThreads);
                 dial.Show();
             }
             else
             {
-                //Kill all the threads
+                button_flag = true;
+                //Kill all the threads by closing
+                dial.Close();
             }
+        }
+
+        public bool toggleButton()
+        {
+            button_startIndicator = !button_startIndicator;
+            button_start.Text = (button_startIndicator) ? "Stop" : "Start";
+            return button_startIndicator;
         }
     }
 }

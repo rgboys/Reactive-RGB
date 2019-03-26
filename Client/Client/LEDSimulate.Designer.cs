@@ -35,9 +35,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(739, 412);
+            this.ClientSize = new System.Drawing.Size(1255, 620);
             this.Name = "LEDSimulate";
             this.Text = "LEDSimulate";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LEDSimulate_FormClosing);
             this.ResumeLayout(false);
 
         }
