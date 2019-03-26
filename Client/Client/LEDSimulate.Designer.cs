@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.directoryEntry1 = new System.DirectoryServices.DirectoryEntry();
             this.SuspendLayout();
             // 
             // LEDSimulate
@@ -42,5 +43,7 @@
         }
 
         #endregion
+
+        private System.DirectoryServices.DirectoryEntry directoryEntry1;
     }
 }
