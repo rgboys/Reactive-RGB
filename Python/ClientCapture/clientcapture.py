@@ -6,6 +6,10 @@ import mss.tools as MSSTools
 import io
 import numpy as np
 import cv2
+import pyaudio
+import aubio
+import numpy as np
+
 
 # ##############################################################
 # Commandline arguments:
@@ -30,6 +34,29 @@ import cv2
 # ##############################################################
 
 #start = time.time()
+
+
+SIMULATED_SQUARES = 10
+TIME_IN_SECS = 10
+# CHANGE AT YOUR OWN RISK 
+CHUNK = 2**11
+RATE = 44100
+# CHANGE AT YOUR OWN RISK 
+
+p=pyaudio.PyAudio()
+stream=p.open(format=pyaudio.paInt16,channels=1,rate=RATE,input=True,
+              frames_per_buffer=CHUNK)
+def readSoundOutputAlpha(): 
+	data = np.frombuffer(stream.read(CHUNK, exception_on_overflow = False),dtype=np.int16)
+	peak=np.average(np.abs(data))*2
+	# colorBars = int(50*peak/2**10) % (1+SIMULATED_SQUARES)
+	colorBars = int(3*peak/2**6)
+	# bars="#"*colorBars
+	# print("%05d %s"%(peak,bars))
+	if(colorBars > 255):
+		colorBars = 255
+	return colorBars
+
 with mss() as sct:
 	#print(sys.argv)
 	if sys.argv[1] == '0':
@@ -75,8 +102,13 @@ with mss() as sct:
 			avg = np.average(avg_per_row, axis=0)	
 			#print('Runtime: ' + str(time.time()-start))
 			#time.sleep(1)
-			print(str(int(avg[2])) + ' ' + str(int(avg[1])) + ' ' + str(int(avg[0])))
+			print(str(readSoundOutputAlpha()) + ' ' + str(int(avg[2])) + ' ' + str(int(avg[1])) + ' ' + str(int(avg[0])))
 			sys.stdout.flush()
+
+			
 			#b = Image.open(io.BytesIO(raw))
 			#b.show()
 			#break
+stream.stop_stream()
+stream.close()
+p.terminate()

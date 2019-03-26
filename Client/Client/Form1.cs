@@ -15,9 +15,11 @@ namespace Client
 {
     public partial class Form1 : Form
     {
+        private static string pathPython = @"C:\Users\lichc\AppData\Local\Programs\Python\Python36\python.exe";
+        private static string pathScript = @"C:\Users\lichc\Desktop\ReactiveRGB\Reactive-RGB\Python\ClientCapture\clientcapture.py";
+
         private Screen prevScreen;
         private Screen[] screens;
-        
 
         public Form1()
         {
@@ -45,9 +47,9 @@ namespace Client
         private void link_previewMonitor_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             var psi = new ProcessStartInfo();
-            psi.FileName = @"C:\Users\lichc\AppData\Local\Programs\Python\Python37\python.exe";
+            psi.FileName = pathPython;
 
-            var script = @"C:\Users\lichc\Desktop\RGBoys\Reactive - RGB\Python\ClientCapture\clientcapture.py";
+            var script = pathScript;
             int monitorIndex = combo_monitor.SelectedIndex+1;
 
             psi.Arguments = $"\"{script}\" \"{"0"}\" \"{monitorIndex}\"";
@@ -107,7 +109,7 @@ namespace Client
                     sections.Add(new Section(100, inc, true));
                     inc += left_widthPerSection;
                 }
-                LEDSimulate dial = new LEDSimulate(sections, combo_monitor.SelectedIndex);
+                LEDSimulate dial = new LEDSimulate(pathScript, pathPython, sections, combo_monitor.SelectedIndex);
                 dial.Show();
             }
             else

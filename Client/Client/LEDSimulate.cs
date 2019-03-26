@@ -16,20 +16,21 @@ namespace Client
         public List<Section> sections;
         public static LEDSimulate instance;
         
-        public LEDSimulate(List<Section> sections, int mon)
+        public LEDSimulate(string pathScript, string pathPython, List<Section> sections, int mon)
         {
             InitializeComponent();
             instance = this;
+            this.TransparencyKey = (BackColor);
             this.sections = sections;
             var t = new Task(() =>
             {
                 Console.WriteLine("here");
                 var psi = new ProcessStartInfo();
-                psi.FileName = @"C:\Users\lichc\AppData\Local\Programs\Python\Python37\python.exe";
+                psi.FileName = pathPython;
 
-                var script = @"C:\Users\lichc\Desktop\RGBoys\Reactive-RGB\Python\ClientCapture\clientcapture.py";
-                int startX = 450;
-                int startY = 400;
+                var script = pathScript;
+                int startX = 0;
+                int startY = 0;
                 int width = 200;
                 int height = 200;
                 int monitor = mon + 1;
@@ -44,13 +45,10 @@ namespace Client
                 p.OutputDataReceived += new DataReceivedEventHandler(proc_OutputDataReceived);
                 p.ErrorDataReceived += new DataReceivedEventHandler(proc_ErrorDataReceived);
                 p.StartInfo = psi;
-                Console.WriteLine("here");
                 p.Start();
-                Console.WriteLine("here");
 
                 p.BeginOutputReadLine();
-                Console.WriteLine("here2");
-                Console.WriteLine("hereF");
+                p.BeginErrorReadLine();
             });
 
             t.Start();
@@ -66,12 +64,18 @@ namespace Client
         static void proc_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             Console.WriteLine(e.Data);
-            string[] rgb = e.Data.Split(' ');
-            int r = Int32.Parse(rgb[0]);
-            int g = Int32.Parse(rgb[1]);
-            int b = Int32.Parse(rgb[2]);
-            //Update
-            instance.BackColor = Color.FromArgb(r, g, b);
+            if(!string.IsNullOrEmpty(e.Data))
+            {
+                string[] argb = e.Data.Split(' ');
+                int a = Int32.Parse(argb[0]);
+                int r = Int32.Parse(argb[1]);
+                int g = Int32.Parse(argb[2]);
+                int b = Int32.Parse(argb[3]);
+                //Update
+                instance.BackColor = Color.FromArgb(r, g, b);
+
+                //Console.WriteLine(string.Format("ARGB: argb({0}, {1}, {2}, {3})", a, r, g, b));
+            }
         }
 
 
