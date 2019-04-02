@@ -32,48 +32,38 @@ namespace Client
             this.formInst = formInst;
 
             //initialize for all sections
-            foreach(Section s in sections)
+            for(int i = 0; i<numThreads; i++)
             {
                 var t = new Task(() =>
                 {
-                    var psi = new ProcessStartInfo();
-                    psi.FileName = pathPython;
-
-                    var script = pathScript;
-                    int startX = 0, startY = 0, width = 0, height = 0;
-
-                    if (!s.isVert)
+                    for(int j = 0+(i*numThreads); j<Math.Ceiling((double)sections.Count/numThreads); j++)
                     {
-                        startX = s.x;
-                        startY = 0;
-                        width = s.sep;
-                        height = s.y;
+                        Section s = sections[j];
+                        var psi = new ProcessStartInfo();
+                        psi.FileName = pathPython;
+
+                        var script = pathScript;
+                        int startX = s.x, startY = s.y, width = s.width, height = s.height;
+
+                        int monitor = mon + 1;
+                        psi.Arguments = $"\"{script}\" \"{"1"}\" \"{monitor}\" \"{startX}\" \"{startY}\" \"{width}\" \"{height}\" \"{j}\"";
+
+                        psi.UseShellExecute = false;
+                        psi.CreateNoWindow = true;
+                        psi.RedirectStandardOutput = true;
+                        psi.RedirectStandardError = true;
+
+                        Process p = new Process();
+                        p.OutputDataReceived += new DataReceivedEventHandler(proc_OutputDataReceived);
+                        p.ErrorDataReceived += new DataReceivedEventHandler(proc_ErrorDataReceived);
+                        p.StartInfo = psi;
+                        p.Start();
+
+                        procs.Add(p);
+
+                        p.BeginOutputReadLine();
+                        p.BeginErrorReadLine();
                     }
-                    else
-                    {
-                        startX = s.x;
-                        startY = 0;
-                        width = s.sep;
-                        height = s.y;
-                    }
-                    int monitor = mon + 1;
-                    psi.Arguments = $"\"{script}\" \"{"1"}\" \"{monitor}\" \"{startX}\" \"{startY}\" \"{width}\" \"{height}\"";
-
-                    psi.UseShellExecute = false;
-                    psi.CreateNoWindow = true;
-                    psi.RedirectStandardOutput = true;
-                    psi.RedirectStandardError = true;
-
-                    Process p = new Process();
-                    p.OutputDataReceived += new DataReceivedEventHandler(proc_OutputDataReceived);
-                    p.ErrorDataReceived += new DataReceivedEventHandler(proc_ErrorDataReceived);
-                    p.StartInfo = psi;
-                    p.Start();
-
-                    procs.Add(p);
-
-                    p.BeginOutputReadLine();
-                    p.BeginErrorReadLine();
                 });
                 t.Start();
             }

@@ -19,11 +19,12 @@ import numpy as np
 # arg[4] = Y_COORD
 # arg[5] = Width of screen to capture
 # arg[6] = Height of screen to capture
+# arg[7] = Section # by index
 #
 # Example execution for the top left of Monitor 1, with a 200x200 box:
-# py .\clientcapture.py 1 1 0 0 200 200
+# py -3.6 .\clientcapture.py 1 1 0 0 200 200 0
 # Example of section for testing monitor 1 (with open image)
-# py .\clientcapture.py 0 1
+# py -3.6 .\clientcapture.py 0 1
 # ##############################################################
 
 
@@ -75,6 +76,8 @@ with mss() as sct:
 		b = Image.open(io.BytesIO(raw))
 		b.show()
 	elif sys.argv[1] == '1':
+		SECTION_IND = sys.argv[7]
+
 		X_COORD = int(sys.argv[3])
 		Y_COORD = int(sys.argv[4])
 		WIDTH = int(sys.argv[5])
@@ -102,7 +105,7 @@ with mss() as sct:
 			avg = np.average(avg_per_row, axis=0)	
 			#print('Runtime: ' + str(time.time()-start))
 			#time.sleep(1)
-			print(str(readSoundOutputAlpha()) + ' ' + str(int(avg[2])) + ' ' + str(int(avg[1])) + ' ' + str(int(avg[0])))
+			print(str(readSoundOutputAlpha()) + ' ' + str(int(avg[2])) + ' ' + str(int(avg[1])) + ' ' + str(int(avg[0])) + ' ' + SECTION_IND)
 			sys.stdout.flush()
 
 			
