@@ -32,38 +32,51 @@ namespace Client
             this.formInst = formInst;
 
             //initialize for all sections
-
-            var t = new Task(() =>
+            foreach(Section s in sections)
             {
-                var psi = new ProcessStartInfo();
-                psi.FileName = pathPython;
+                var t = new Task(() =>
+                {
+                    var psi = new ProcessStartInfo();
+                    psi.FileName = pathPython;
 
-                var script = pathScript;
-                int startX = 0;
-                int startY = 0;
-                int width = 200;
-                int height = 200;
-                int monitor = mon + 1;
-                psi.Arguments = $"\"{script}\" \"{"1"}\" \"{monitor}\" \"{startX}\" \"{startY}\" \"{width}\" \"{height}\"";
+                    var script = pathScript;
+                    int startX = 0, startY = 0, width = 0, height = 0;
 
-                psi.UseShellExecute = false;
-                psi.CreateNoWindow = true;
-                psi.RedirectStandardOutput = true;
-                psi.RedirectStandardError = true;
+                    if (!s.isVert)
+                    {
+                        startX = s.x;
+                        startY = 0;
+                        width = s.sep;
+                        height = s.y;
+                    }
+                    else
+                    {
+                        startX = s.x;
+                        startY = 0;
+                        width = s.sep;
+                        height = s.y;
+                    }
+                    int monitor = mon + 1;
+                    psi.Arguments = $"\"{script}\" \"{"1"}\" \"{monitor}\" \"{startX}\" \"{startY}\" \"{width}\" \"{height}\"";
 
-                Process p = new Process();
-                p.OutputDataReceived += new DataReceivedEventHandler(proc_OutputDataReceived);
-                p.ErrorDataReceived += new DataReceivedEventHandler(proc_ErrorDataReceived);
-                p.StartInfo = psi;
-                p.Start();
+                    psi.UseShellExecute = false;
+                    psi.CreateNoWindow = true;
+                    psi.RedirectStandardOutput = true;
+                    psi.RedirectStandardError = true;
 
-                procs.Add(p);
+                    Process p = new Process();
+                    p.OutputDataReceived += new DataReceivedEventHandler(proc_OutputDataReceived);
+                    p.ErrorDataReceived += new DataReceivedEventHandler(proc_ErrorDataReceived);
+                    p.StartInfo = psi;
+                    p.Start();
 
-                p.BeginOutputReadLine();
-                p.BeginErrorReadLine();
-            });
-            t.Start();
-            
+                    procs.Add(p);
+
+                    p.BeginOutputReadLine();
+                    p.BeginErrorReadLine();
+                });
+                t.Start();
+            }
         }
 
         static void proc_ErrorDataReceived(object sender, DataReceivedEventArgs e)
@@ -74,12 +87,6 @@ namespace Client
 
         static void proc_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            //Rather than updating with instance.BackColor, need to change to work with individual sections
-            //In sense, need to know what section we are working with
-            //Perhaps it would be best to initiate py script with section info and have it be part of the output
-            //Come to think, since we need to work with a dynamically changing screen it would not be enough to update by proportion
-            //Doing so would mean screen tearing
-            //UI needs to update as we move the screen and change in size without this function being in charge so we don't overwrite anything and get blank spaces
             if (!string.IsNullOrEmpty(e.Data))
             {
                 string[] argb = e.Data.Split(' ');

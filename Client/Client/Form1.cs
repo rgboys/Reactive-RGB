@@ -106,17 +106,38 @@ namespace Client
                 int inc = 0;
 
                 List<Section> sections = new List<Section>();
+
+                //Get for top of monitor
                 for (int i = 0; i < bottom_numSections; i++)
                 {
-                    sections.Add(new Section(inc, 100, false));
+                    sections.Add(new Section(inc, 0, bottom_widthPerSection, 100, bottom_widthPerSection / prevScreen.Bounds.Width, 100 / prevScreen.Bounds.Height, false));
                     inc += bottom_widthPerSection;
                 }
                 inc = 0;
+
+                //Get for bottom of monitor
+                for (int i = 0; i < bottom_numSections; i++)
+                {
+                    sections.Add(new Section(inc, prevScreen.Bounds.Height-100, bottom_widthPerSection, 100, bottom_widthPerSection / prevScreen.Bounds.Width, 100 / prevScreen.Bounds.Height, false));
+                    inc += bottom_widthPerSection;
+                }
+                inc = 0;
+
+                //Get for left of monitor
                 for (int i = 0; i < left_numSections; i++)
                 {
-                    sections.Add(new Section(100, inc, true));
+                    sections.Add(new Section(0, inc, 100, left_widthPerSection, 100 / prevScreen.Bounds.Width, left_widthPerSection / prevScreen.Bounds.Height, true));
                     inc += left_widthPerSection;
                 }
+                inc = 0;
+
+                //Get for right of monitor
+                for (int i = 0; i < left_numSections; i++)
+                {
+                    sections.Add(new Section(prevScreen.Bounds.Width-100, inc, 100, left_widthPerSection, 100 / prevScreen.Bounds.Width, left_widthPerSection / prevScreen.Bounds.Height, true));
+                    inc += left_widthPerSection;
+                }
+                inc = 0;
 
                 dial = new LEDSimulate(pathScript, pathPython, formInst, sections, combo_monitor.SelectedIndex, numThreads);
                 dial.Show();

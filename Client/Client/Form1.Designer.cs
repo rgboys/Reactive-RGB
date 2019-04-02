@@ -42,6 +42,7 @@
             this.button_start = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.numeric_threads = new System.Windows.Forms.NumericUpDown();
+            this.toolTip2 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.numeric_verticalLEDs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numeric_horizontalLEDs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numeric_threads)).BeginInit();
@@ -96,6 +97,8 @@
             this.numeric_verticalLEDs.Name = "numeric_verticalLEDs";
             this.numeric_verticalLEDs.Size = new System.Drawing.Size(74, 20);
             this.numeric_verticalLEDs.TabIndex = 4;
+            this.toolTip1.SetToolTip(this.numeric_verticalLEDs, "How many LEDs you have at either the left or right side of your monitor. Do not c" +
+        "ombine");
             this.numeric_verticalLEDs.Value = new decimal(new int[] {
             15,
             0,
@@ -110,6 +113,8 @@
             this.label3.Size = new System.Drawing.Size(42, 13);
             this.label3.TabIndex = 5;
             this.label3.Text = "Vertical";
+            this.toolTip1.SetToolTip(this.label3, "How many LEDs you have at either the left or right side of your monitor. Do not c" +
+        "ombine");
             // 
             // label_sizeOfPartition
             // 
@@ -127,6 +132,8 @@
             this.label4.Size = new System.Drawing.Size(54, 13);
             this.label4.TabIndex = 7;
             this.label4.Text = "Horizontal";
+            this.toolTip2.SetToolTip(this.label4, "How many LEDs you have at either the top or bottom of your monitor. Do not combin" +
+        "e");
             // 
             // numeric_horizontalLEDs
             // 
@@ -139,6 +146,8 @@
             this.numeric_horizontalLEDs.Name = "numeric_horizontalLEDs";
             this.numeric_horizontalLEDs.Size = new System.Drawing.Size(74, 20);
             this.numeric_horizontalLEDs.TabIndex = 5;
+            this.toolTip2.SetToolTip(this.numeric_horizontalLEDs, "How many LEDs you have at either the top or bottom of your monitor. Do not combin" +
+        "e");
             this.numeric_horizontalLEDs.Value = new decimal(new int[] {
             30,
             0,
@@ -163,6 +172,7 @@
             this.label5.Size = new System.Drawing.Size(69, 13);
             this.label5.TabIndex = 10;
             this.label5.Text = "Max Threads";
+            this.toolTip1.SetToolTip(this.label5, "For the best performance, match the number of cores to your CPU x2");
             // 
             // numeric_threads
             // 
@@ -175,6 +185,7 @@
             this.numeric_threads.Name = "numeric_threads";
             this.numeric_threads.Size = new System.Drawing.Size(74, 20);
             this.numeric_threads.TabIndex = 3;
+            this.toolTip1.SetToolTip(this.numeric_threads, "For the best performance, match the number of cores to your CPU x2");
             this.numeric_threads.Value = new decimal(new int[] {
             4,
             0,
@@ -224,6 +235,7 @@
         private System.Windows.Forms.Button button_start;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.NumericUpDown numeric_threads;
+        private System.Windows.Forms.ToolTip toolTip2;
     }
 }
 
