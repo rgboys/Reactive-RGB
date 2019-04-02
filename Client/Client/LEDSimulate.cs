@@ -18,6 +18,8 @@ namespace Client
 
         private List<Process> procs;
 
+        private Graphics g;
+
         //Requires this instance just in case the user closes from the form instead of hitting the 'stop' button on the main form
         private Form1 formInst;
 
@@ -30,6 +32,7 @@ namespace Client
             this.procs = new List<Process>();
 
             this.formInst = formInst;
+            g = instance.CreateGraphics();
 
             //initialize for all sections
             for(int i = 0; i<numThreads; i++)
@@ -84,10 +87,21 @@ namespace Client
                 int r = Int32.Parse(argb[1]);
                 int g = Int32.Parse(argb[2]);
                 int b = Int32.Parse(argb[3]);
+                int index = Int32.Parse(argb[4]);
                 //Update
                 instance.BackColor = Color.FromArgb(r, g, b);
-
                 //Console.WriteLine(string.Format("ARGB: argb({0}, {1}, {2}, {3})", a, r, g, b));
+                using (Pen p = new Pen(Color.FromArgb(a, r, g, b)))
+                {
+                    Section s = instance.sections[index];
+                    if(s.isVert)
+                    {
+                        float r_width = instance.formInst.prevScreen.Bounds.Width / instance.Width;
+                        float r_height = instance.formInst.prevScreen.Bounds.Height / instance.Height;
+
+                        instance.g.FillRectangle(p.Brush, s.x / r_width, s.y / r_height, s.width / r_width, s.height / r_height);
+                    }
+                }
             }
         }
 

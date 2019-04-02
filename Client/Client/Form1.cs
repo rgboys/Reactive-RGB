@@ -18,7 +18,7 @@ namespace Client
         private static string pathPython = @"C:\Users\lichc\AppData\Local\Programs\Python\Python36\python.exe";
         private static string pathScript = @"C:\Users\lichc\Desktop\ReactiveRGB\Reactive-RGB\Python\ClientCapture\clientcapture.py";
 
-        private Screen prevScreen;
+        public Screen prevScreen;
         private Screen[] screens;
 
         private LEDSimulate dial;
@@ -110,7 +110,7 @@ namespace Client
                 //Get for top of monitor
                 for (int i = 0; i < bottom_numSections; i++)
                 {
-                    sections.Add(new Section(inc, 0, bottom_widthPerSection, 100, bottom_widthPerSection / prevScreen.Bounds.Width, 100 / prevScreen.Bounds.Height, false));
+                    sections.Add(new Section(inc, 0, bottom_widthPerSection, 100, false));
                     inc += bottom_widthPerSection;
                 }
                 inc = 0;
@@ -118,7 +118,7 @@ namespace Client
                 //Get for bottom of monitor
                 for (int i = 0; i < bottom_numSections; i++)
                 {
-                    sections.Add(new Section(inc, prevScreen.Bounds.Height-100, bottom_widthPerSection, 100, bottom_widthPerSection / prevScreen.Bounds.Width, 100 / prevScreen.Bounds.Height, false));
+                    sections.Add(new Section(inc, prevScreen.Bounds.Height-100, bottom_widthPerSection, 100, false));
                     inc += bottom_widthPerSection;
                 }
                 inc = 0;
@@ -126,7 +126,7 @@ namespace Client
                 //Get for left of monitor
                 for (int i = 0; i < left_numSections; i++)
                 {
-                    sections.Add(new Section(0, inc, 100, left_widthPerSection, 100 / prevScreen.Bounds.Width, left_widthPerSection / prevScreen.Bounds.Height, true));
+                    sections.Add(new Section(0, inc, 100, left_widthPerSection, true));
                     inc += left_widthPerSection;
                 }
                 inc = 0;
@@ -134,7 +134,7 @@ namespace Client
                 //Get for right of monitor
                 for (int i = 0; i < left_numSections; i++)
                 {
-                    sections.Add(new Section(prevScreen.Bounds.Width-100, inc, 100, left_widthPerSection, 100 / prevScreen.Bounds.Width, left_widthPerSection / prevScreen.Bounds.Height, true));
+                    sections.Add(new Section(prevScreen.Bounds.Width-100, inc, 100, left_widthPerSection, true));
                     inc += left_widthPerSection;
                 }
                 inc = 0;
