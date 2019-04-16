@@ -13,13 +13,14 @@ import numpy as np
 
 # ##############################################################
 # Commandline arguments:
-# arg[1] = Display preview of monitor, or run (0, 1)
+# arg[1] = Display preview of monitor (0), or run (1 - also runs audio | anything else will not run audio)
 # arg[2] = Monitor to capture
 # arg[3] = X_COORD
 # arg[4] = Y_COORD
 # arg[5] = Width of screen to capture
 # arg[6] = Height of screen to capture
 # arg[7] = Section # by index
+# arg[8] = How many subsections we need to split and calculate dominant RGB for within the section index (for optimization)
 #
 # Example execution for the top left of Monitor 1, with a 200x200 box:
 # py -3.6 .\clientcapture.py 1 1 0 0 200 200 0
@@ -36,17 +37,18 @@ import numpy as np
 
 #start = time.time()
 
+if sys.argv[1] == '1':
+	SIMULATED_SQUARES = 10
+	TIME_IN_SECS = 10
+	# CHANGE AT YOUR OWN RISK 
+	CHUNK = 2**11
+	RATE = 44100
+	# CHANGE AT YOUR OWN RISK 
 
-SIMULATED_SQUARES = 10
-TIME_IN_SECS = 10
-# CHANGE AT YOUR OWN RISK 
-CHUNK = 2**11
-RATE = 44100
-# CHANGE AT YOUR OWN RISK 
+	p=pyaudio.PyAudio()
+	stream=p.open(format=pyaudio.paInt16,channels=1,rate=RATE,input=True,
+				frames_per_buffer=CHUNK)
 
-p=pyaudio.PyAudio()
-stream=p.open(format=pyaudio.paInt16,channels=1,rate=RATE,input=True,
-              frames_per_buffer=CHUNK)
 def readSoundOutputAlpha(): 
 	data = np.frombuffer(stream.read(CHUNK, exception_on_overflow = False),dtype=np.int16)
 	peak=np.average(np.abs(data))*2
@@ -75,7 +77,7 @@ with mss() as sct:
 		raw = MSSTools.to_png(im.rgb, im.size)
 		b = Image.open(io.BytesIO(raw))
 		b.show()
-	elif sys.argv[1] == '1':
+	else:
 		SECTION_IND = sys.argv[7]
 
 		X_COORD = int(sys.argv[3])
@@ -97,15 +99,23 @@ with mss() as sct:
 		# Continuously loop until process is killed
 		while True:
 			im = sct.grab(monitor)
-
-			raw = MSSTools.to_png(im.rgb, im.size)
-			nparr = np.frombuffer(raw, np.uint8)
-			cimg = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-			avg_per_row = np.average(cimg, axis=0)
-			avg = np.average(avg_per_row, axis=0)	
+			#TODO - Split image up into however many sections equally
+			for i in np.arange(int(sys.argv[8])):
+				raw = MSSTools.to_png(im.rgb, im.size)
+				nparr = np.frombuffer(raw, np.uint8)
+				cimg = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+				avg_per_row = np.average(cimg, axis=0)
+				avg = np.average(avg_per_row, axis=0)
+			
 			#print('Runtime: ' + str(time.time()-start))
 			#time.sleep(1)
-			print(str(readSoundOutputAlpha()) + ' ' + str(int(avg[2])) + ' ' + str(int(avg[1])) + ' ' + str(int(avg[0])) + ' ' + SECTION_IND)
+
+			if sys.argv[1] == '1':
+				alph = str(readSoundOutputAlpha())
+				print(alph + ' ' + str(int(avg[2])) + ' ' + str(int(avg[1])) + ' ' + str(int(avg[0])) + ' ' + SECTION_IND)
+			else:
+				print(str(int(avg[2])) + ' ' + str(int(avg[1])) + ' ' + str(int(avg[0])) + ' ' + SECTION_IND)
+		
 			sys.stdout.flush()
 
 			
