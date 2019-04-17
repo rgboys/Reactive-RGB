@@ -20,7 +20,7 @@ import numpy as np
 # arg[5] = Width of screen to capture
 # arg[6] = Height of screen to capture
 # arg[7] = Section # by index
-# arg[8] = How many subsections we need to split and calculate dominant RGB for within the section index (for optimization)
+# arg[8] = How many subsections we need to split and calculate dominant RGB for within the section index (for optimization) (sections.Count)
 #
 # Example execution for the top left of Monitor 1, with a 200x200 box:
 # py -3.6 .\clientcapture.py 1 1 0 0 200 200 0
@@ -100,21 +100,25 @@ with mss() as sct:
 		while True:
 			im = sct.grab(monitor)
 			#TODO - Split image up into however many sections equally
+			rgb = ''
 			for i in np.arange(int(sys.argv[8])):
 				raw = MSSTools.to_png(im.rgb, im.size)
 				nparr = np.frombuffer(raw, np.uint8)
 				cimg = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 				avg_per_row = np.average(cimg, axis=0)
 				avg = np.average(avg_per_row, axis=0)
+				rgb +=  str(int(avg[2])) + ' ' + str(int(avg[1])) + ' ' + str(int(avg[0])) + ' '
 			
 			#print('Runtime: ' + str(time.time()-start))
 			#time.sleep(1)
 
 			if sys.argv[1] == '1':
 				alph = str(readSoundOutputAlpha())
-				print(alph + ' ' + str(int(avg[2])) + ' ' + str(int(avg[1])) + ' ' + str(int(avg[0])) + ' ' + SECTION_IND)
+				#Print such that the read order is R G B|R G B|R G B--SECTION_IND (split by double dash, then bar, then split by space)
+				#If section object labels that it's passing in a '1' for sys.argv[1], then it should expect len()
+				print(alph + '--' + rgb + '--' + SECTION_IND)
 			else:
-				print(str(int(avg[2])) + ' ' + str(int(avg[1])) + ' ' + str(int(avg[0])) + ' ' + SECTION_IND)
+				print(rgb + '--' + SECTION_IND)
 		
 			sys.stdout.flush()
 

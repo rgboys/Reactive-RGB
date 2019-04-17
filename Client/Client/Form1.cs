@@ -95,6 +95,7 @@ namespace Client
             {
                 int numThreads = Int32.Parse(numeric_threads.Value.ToString());
 
+                
                 //Width per section
                 int bottom_widthPerSection = (prevScreen.Bounds.Width / Int32.Parse(numeric_horizontalLEDs.Value.ToString()));
                 int left_widthPerSection = (prevScreen.Bounds.Height / Int32.Parse(numeric_verticalLEDs.Value.ToString()));
@@ -106,6 +107,14 @@ namespace Client
                 int inc = 0;
 
                 List<Section> sections = new List<Section>();
+                sections.Add(new Section(0, 0, prevScreen.Bounds.Width, 100, true));
+                sections.Add(new Section(0, prevScreen.Bounds.Height - 100, prevScreen.Bounds.Width, 100, false));
+                sections.Add(new Section(0, 0, 100, prevScreen.Bounds.Height, false));
+                sections.Add(new Section(prevScreen.Bounds.Width - 100, 0, 100, prevScreen.Bounds.Height, false));
+
+                /* Rather than defining sections as the points of their LEDs, we're going to define a section based on the number of available threads
+                 * In this case, it'll be 4 | each thread being responsible for NSEW
+                 * Implementation above
 
                 //Get for top of monitor
                 for (int i = 0; i < bottom_numSections; i++)
@@ -126,7 +135,7 @@ namespace Client
                 //Get for left of monitor
                 for (int i = 0; i < left_numSections; i++)
                 {
-                    sections.Add(new Section(0, inc, 100, left_widthPerSection, true));
+                    sections.Add(new Section(0, inc, 100, left_widthPerSection, false));
                     inc += left_widthPerSection;
                 }
                 inc = 0;
@@ -134,10 +143,11 @@ namespace Client
                 //Get for right of monitor
                 for (int i = 0; i < left_numSections; i++)
                 {
-                    sections.Add(new Section(prevScreen.Bounds.Width-100, inc, 100, left_widthPerSection, true));
+                    sections.Add(new Section(prevScreen.Bounds.Width-100, inc, 100, left_widthPerSection, false));
                     inc += left_widthPerSection;
                 }
                 inc = 0;
+                */
 
                 dial = new LEDSimulate(pathScript, pathPython, formInst, sections, combo_monitor.SelectedIndex, numThreads);
                 dial.Show();

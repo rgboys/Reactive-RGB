@@ -82,7 +82,7 @@ namespace Client
         {
             if (!string.IsNullOrEmpty(e.Data))
             {
-                string[] argb = e.Data.Split(' ');
+                string[] argb = e.Data.Split(;
                 int a = Int32.Parse(argb[0]);
                 int r = Int32.Parse(argb[1]);
                 int g = Int32.Parse(argb[2]);
