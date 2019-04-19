@@ -89,9 +89,28 @@ namespace Client
                 int g = 0;
                 int b = 0;
                 Section s = instance.sections[index];
-                if (instance.sections[index].useAudio)
+                ColorSection(s, argb_init[1].Split('|'));
+            }
+        }
+
+        private static void ColorSection(Section s, string[] argb_arr)
+        {
+            int num_sections = argb_arr.Length;
+            int pixelsPerSection = (s.isVert) ? (s.height / num_sections) : (s.width / num_sections);
+            int currX = s.x;
+            int currY = s.y;
+            //Changing values are based off s.isVert
+
+            //Update
+            //instance.BackColor = Color.FromArgb(r, g, b);
+            //Console.WriteLine(string.Format("ARGB: argb({0}, {1}, {2}, {3})", a, r, g, b));
+            for (int i = 0; i < num_sections; i++)
+            {
+                string [] argb = argb_arr[i].Split(' ');
+                int a = 255, r = 0, g = 0, b = 0;
+
+                if (s.useAudio)
                 {
-                    string[] argb_arr = argb_init[1].Split('|');
                     a = Int32.Parse(argb[0]);
                     r = Int32.Parse(argb[1]);
                     g = Int32.Parse(argb[2]);
@@ -99,29 +118,25 @@ namespace Client
                 }
                 else
                 {
-                    r = Int32.Parse(argb_init[0]);
-                    g = Int32.Parse(argb_init[1]);
-                    b = Int32.Parse(argb_init[2]);
+                    r = Int32.Parse(argb[0]);
+                    g = Int32.Parse(argb[1]);
+                    b = Int32.Parse(argb[2]);
                 }
-                //Update
-                instance.BackColor = Color.FromArgb(r, g, b);
-                //Console.WriteLine(string.Format("ARGB: argb({0}, {1}, {2}, {3})", a, r, g, b));
-                using (Pen p = new Pen(Color.FromArgb(a, r, g, b)))
-                {
-                    if(s.isVert)
-                    {
-                        float r_width = instance.formInst.prevScreen.Bounds.Width / instance.Width;
-                        float r_height = instance.formInst.prevScreen.Bounds.Height / instance.Height;
 
-                        instance.g.FillRectangle(p.Brush, s.x / r_width, s.y / r_height, s.width / r_width, s.height / r_height);
-                    }
+                Pen p = new Pen(Color.FromArgb(a, r, g, b));
+
+                if (s.isVert)
+                {
+                    instance.g.FillRectangle(p.Brush, currX, currY, s.width, currY + pixelsPerSection);
+                    currY += pixelsPerSection + 1;
+                }
+                else
+                {
+                    instance.g.FillRectangle(p.Brush, currX, currY, currX + pixelsPerSection, s.height);
+                    currX += pixelsPerSection + 1;
                 }
             }
-        }
 
-        private void ColorSection(Section s, string [] argb_arr)
-        {
-            
         }
 
         //Kill processes
