@@ -24,7 +24,7 @@ import image_slicer as slicer
 # arg[8] = How many subsections we need to split and calculate dominant RGB for within the section index (for optimization) (sections.Count)
 #
 # Example execution for the top left of Monitor 1, with a 200x200 box:
-# py -3.6 .\clientcapture.py 1 1 0 0 200 200 0
+# py -3.6 .\clientcapture.py 1 1 0 0 1920 200 0 20 -- Example of capturing a 1920x1080 monitor with 20 subsections
 # Example of section for testing monitor 1 (with open image)
 # py -3.6 .\clientcapture.py 0 1
 # ##############################################################
@@ -100,10 +100,11 @@ with mss() as sct:
 		
 		# Continuously loop until process is killed
 		while True:
+			image_output = 'image_in_sec_' + SECTION_IND + '_.png'.format(**monitor)
 			im = sct.grab(monitor)
-			raw = MSSTools.to_png(im.rgb, im.size)
+			raw = MSSTools.to_png(im.rgb, im.size, output=image_output)
 			#Split image into equal sections
-			sub_sections = slicer.slice(im, SUB_SECTION_COUNT)
+			sub_sections = slicer.slice(image_output, SUB_SECTION_COUNT)
 			print(len(sub_sections))
 			break
 
