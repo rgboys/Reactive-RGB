@@ -83,13 +83,9 @@ namespace Client
             if (!string.IsNullOrEmpty(e.Data))
             {
                 string[] argb_init = e.Data.Split(new string[] { "--" }, StringSplitOptions.None);
-                int index = Int32.Parse(argb_init[argb_init.Length - 1]);
-                int a = 255;
-                int r = 0;
-                int g = 0;
-                int b = 0;
+                int index = Int32.Parse(argb_init[1]);
                 Section s = instance.sections[index];
-                ColorSection(s, argb_init[1].Split('|'));
+                ColorSection(s, argb_init[0].Split('|'));
             }
         }
 

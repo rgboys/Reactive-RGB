@@ -114,7 +114,7 @@ with mss() as sct:
 				cimg = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 				avg_per_row = np.average(cimg, axis=0)
 				avg = np.average(avg_per_row, axis=0)
-				rgb +=  str(int(avg[2])) + ' ' + str(int(avg[1])) + ' ' + str(int(avg[0])) + ' '
+				rgb +=  str(int(avg[2])) + ' ' + str(int(avg[1])) + ' ' + str(int(avg[0]))
 			
 			#print('Runtime: ' + str(time.time()-start))
 			#time.sleep(1)
@@ -123,7 +123,8 @@ with mss() as sct:
 				alph = str(readSoundOutputAlpha())
 				#Print such that the read order is R G B|R G B|R G B--SECTION_IND (split by double dash, then bar, then split by space)
 				#If section object labels that it's passing in a '1' for sys.argv[1], then it should expect len()
-				print(alph + '--' + rgb + '--' + SECTION_IND)
+				rgb = alph + ' ' + rgb
+				print(rgb + '--' + SECTION_IND)
 			else:
 				print(rgb + '--' + SECTION_IND)
 		
