@@ -82,18 +82,32 @@ namespace Client
         {
             if (!string.IsNullOrEmpty(e.Data))
             {
-                string[] argb = e.Data.Split(;
-                int a = Int32.Parse(argb[0]);
-                int r = Int32.Parse(argb[1]);
-                int g = Int32.Parse(argb[2]);
-                int b = Int32.Parse(argb[3]);
-                int index = Int32.Parse(argb[4]);
+                string[] argb_init = e.Data.Split(new string[] { "--" }, StringSplitOptions.None);
+                int index = Int32.Parse(argb_init[argb_init.Length - 1]);
+                int a = 255;
+                int r = 0;
+                int g = 0;
+                int b = 0;
+                Section s = instance.sections[index];
+                if (instance.sections[index].useAudio)
+                {
+                    string[] argb_arr = argb_init[1].Split('|');
+                    a = Int32.Parse(argb[0]);
+                    r = Int32.Parse(argb[1]);
+                    g = Int32.Parse(argb[2]);
+                    b = Int32.Parse(argb[3]);
+                }
+                else
+                {
+                    r = Int32.Parse(argb_init[0]);
+                    g = Int32.Parse(argb_init[1]);
+                    b = Int32.Parse(argb_init[2]);
+                }
                 //Update
                 instance.BackColor = Color.FromArgb(r, g, b);
                 //Console.WriteLine(string.Format("ARGB: argb({0}, {1}, {2}, {3})", a, r, g, b));
                 using (Pen p = new Pen(Color.FromArgb(a, r, g, b)))
                 {
-                    Section s = instance.sections[index];
                     if(s.isVert)
                     {
                         float r_width = instance.formInst.prevScreen.Bounds.Width / instance.Width;
@@ -103,6 +117,11 @@ namespace Client
                     }
                 }
             }
+        }
+
+        private void ColorSection(Section s, string [] argb_arr)
+        {
+            
         }
 
         //Kill processes

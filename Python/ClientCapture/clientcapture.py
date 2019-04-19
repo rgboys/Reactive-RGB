@@ -9,6 +9,7 @@ import cv2
 import pyaudio
 import aubio
 import numpy as np
+import image_slicer as slicer
 
 
 # ##############################################################
@@ -79,6 +80,7 @@ with mss() as sct:
 		b.show()
 	else:
 		SECTION_IND = sys.argv[7]
+		SUB_SECTION_COUNT = int(sys.argv[8])
 
 		X_COORD = int(sys.argv[3])
 		Y_COORD = int(sys.argv[4])
@@ -99,11 +101,16 @@ with mss() as sct:
 		# Continuously loop until process is killed
 		while True:
 			im = sct.grab(monitor)
-			#TODO - Split image up into however many sections equally
+			raw = MSSTools.to_png(im.rgb, im.size)
+			#Split image into equal sections
+			sub_sections = slicer.slice(im, SUB_SECTION_COUNT)
+			print(len(sub_sections))
+			break
+
 			rgb = ''
-			for i in np.arange(int(sys.argv[8])):
-				raw = MSSTools.to_png(im.rgb, im.size)
-				nparr = np.frombuffer(raw, np.uint8)
+			for i in np.arange(SUB_SECTION_COUNT):
+				sub_section_image = sub_sections[i]
+				nparr = np.frombuffer(sub_section_image, np.uint8)
 				cimg = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 				avg_per_row = np.average(cimg, axis=0)
 				avg = np.average(avg_per_row, axis=0)
