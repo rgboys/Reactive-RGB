@@ -16,24 +16,59 @@ namespace Client
         public List<Section> sections;
         public static LEDSimulate instance;
 
-        private List<Process> procs;
+        private List<PaintForm> paintList = new List<PaintForm>();
+        /* PaintList
+        Order: (Left * Right) + Right (left is Section, right is SubSectionInd)
+        0	0	0
+	        1	1
+	        2	2
+	        3	3
+	        4	4
+        1	5	0
+	        6	1
+	        7	2
+	        8	3
+	        9	4
+        2	10	0
+	        11	1
+	        12	2
+	        13	3
+	        14	4
 
-        private Graphics g;
+        section_ind * len(sub_section_ind) + i
+        Can access exact paint ID in O(1)
+
+            TODO -- Add a thread that calls this.Update() at 30fps
+        */
+        private List<Process> procs;
 
         //Requires this instance just in case the user closes from the form instead of hitting the 'stop' button on the main form
         private Form1 formInst;
+        Bitmap screen;
 
         public LEDSimulate(string pathScript, string pathPython, Form1 formInst, List<Section> sections, int mon, int numThreads)
         {
             InitializeComponent();
             instance = this;
+            screen = new Bitmap(instance.Width, instance.Height);
             this.TransparencyKey = (BackColor);
             this.sections = sections;
             this.procs = new List<Process>();
-
             this.formInst = formInst;
-            g = instance.CreateGraphics();
-            Console.WriteLine(sections.Count);
+
+            //Initialize timer to tick every 30 seconds to update UI
+            timer_updatePaint.Interval = 33;
+
+            //Load with dummy data to update later
+            Pen dummy_pen = new Pen(Color.FromArgb(0, 0, 0, 0));
+            foreach (Section s in sections)
+            {
+                for(int i = 0; i<s.subSections; i++)
+                {
+                    paintList.Add(new PaintForm(dummy_pen, 0, 0, 0, 0));
+                }
+            }
+
             //initialize for all sections
             for(int i = 0; i<numThreads; i++)
             {
@@ -47,7 +82,7 @@ namespace Client
                     int startX = s.x, startY = s.y, width = s.width, height = s.height;
 
                     int monitor = mon + 1;
-                    psi.Arguments = $"\"{script}\" \"{"1"}\" \"{monitor}\" \"{startX}\" \"{startY}\" \"{width}\" \"{height}\" \"{i}\"  \"{20}\"";
+                    psi.Arguments = $"\"{script}\" \"{((s.useAudio) ? "1" : "-2")}\" \"{monitor}\" \"{startX}\" \"{startY}\" \"{width}\" \"{height}\" \"{i}\"  \"{s.subSections}\"";
 
                     psi.UseShellExecute = false;
                     psi.CreateNoWindow = true;
@@ -65,41 +100,11 @@ namespace Client
                     p.BeginOutputReadLine();
                     p.BeginErrorReadLine();
                 });
-
-                /*var t = new Task(() =>
-                {
-                    for(int j = 0+(i*numThreads); j<Math.Ceiling((double)sections.Count/numThreads); j++)
-                    {
-                        Section s = sections[j];
-                        var psi = new ProcessStartInfo();
-                        psi.FileName = pathPython;
-
-                        var script = pathScript;
-                        int startX = s.x, startY = s.y, width = s.width, height = s.height;
-
-                        int monitor = mon + 1;
-                        psi.Arguments = $"\"{script}\" \"{"1"}\" \"{monitor}\" \"{startX}\" \"{startY}\" \"{width}\" \"{height}\" \"{j}\"";
-
-                        psi.UseShellExecute = false;
-                        psi.CreateNoWindow = true;
-                        psi.RedirectStandardOutput = true;
-                        psi.RedirectStandardError = true;
-
-                        Process p = new Process();
-                        p.OutputDataReceived += new DataReceivedEventHandler(proc_OutputDataReceived);
-                        p.ErrorDataReceived += new DataReceivedEventHandler(proc_ErrorDataReceived);
-                        p.StartInfo = psi;
-                        p.Start();
-
-                        procs.Add(p);
-                        Console.WriteLine("Added process");
-                        p.BeginOutputReadLine();
-                        p.BeginErrorReadLine();
-                    }
-                });*/
+                
                 t.Start();
             }
             Console.WriteLine("Finished adding and starting");
+            timer_updatePaint.Start();
         }
 
         static void proc_ErrorDataReceived(object sender, DataReceivedEventArgs e)
@@ -112,21 +117,24 @@ namespace Client
         {
             if (!string.IsNullOrEmpty(e.Data))
             {
-                Console.WriteLine("herea");
                 string[] argb_init = e.Data.Split(new string[] { "--" }, StringSplitOptions.None);
                 int index = Int32.Parse(argb_init[1]);
                 Section s = instance.sections[index];
-                ColorSection(s, argb_init[0].Split('|'));
+                instance.ColorSection(s, argb_init[0].Split('|'), index);
             }
         }
 
-        private static void ColorSection(Section s, string[] argb_arr)
+        private void ColorSection(Section s, string[] argb_arr, int index)
         {
-            Console.WriteLine("here");
+            Graphics gr = this.CreateGraphics();
+
+            float r_width = instance.formInst.prevScreen.Bounds.Width / instance.Width;
+            float r_height = instance.formInst.prevScreen.Bounds.Height / instance.Height;
             int num_sections = argb_arr.Length;
-            int pixelsPerSection = (s.isVert) ? (s.height / num_sections) : (s.width / num_sections);
-            int currX = s.x;
-            int currY = s.y;
+            int pixelsPerSection = (int)((s.isVert) ? ((s.height / num_sections) / r_height) : ((s.width / num_sections) / r_width));
+            int currX = (int)(s.x / r_width);
+            int currY = (int)(s.y / r_height);
+
             //Changing values are based off s.isVert
 
             //Update
@@ -152,21 +160,30 @@ namespace Client
                 }
 
                 Pen p = new Pen(Color.FromArgb(a, r, g, b));
-
+                PaintForm tp = paintList[index * argb_arr.Length + i];
                 if (s.isVert)
                 {
-                    instance.g.FillRectangle(p.Brush, currX, currY, s.width, currY + pixelsPerSection);
-                    currY += pixelsPerSection + 1;
+                    tp.p = p;
+                    tp.x = currX;
+                    tp.y = currY;
+                    tp.width = s.width;
+                    tp.height = currY + pixelsPerSection;
+
+                    currY += pixelsPerSection;
                 }
                 else
                 {
-                    instance.g.FillRectangle(p.Brush, currX, currY, currX + pixelsPerSection, s.height);
-                    currX += pixelsPerSection + 1;
+                    tp.p = p;
+                    tp.x = currX;
+                    tp.y = currY;
+                    tp.width = currX + pixelsPerSection;
+                    tp.height = s.height;
+
+                    currX += pixelsPerSection;
                 }
             }
-
         }
-
+        
         //Kill processes
         private void LEDSimulate_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -180,6 +197,37 @@ namespace Client
                 formInst.toggleButton();
             }
             formInst.button_flag = false;
+        }
+        
+
+        private void LEDSimulate_Paint(object sender, PaintEventArgs e)
+        {
+            using (var gfx = e.Graphics)
+            {
+                // Create solid brush.
+                foreach(PaintForm f in paintList)
+                {
+                    float r_width = instance.formInst.prevScreen.Bounds.Width / instance.Width;
+                    float r_height = instance.formInst.prevScreen.Bounds.Height / instance.Height;
+                    gfx.FillRectangle(f.p.Brush, f.x, f.y, f.width, f.height);
+                }
+            }
+
+        }
+
+        private void LEDSimulate_ResizeEnd(object sender, EventArgs e)
+        {
+            Invalidate();
+        }
+
+        private void LEDSimulate_ResizeBegin(object sender, EventArgs e)
+        {
+            Invalidate();
+        }
+
+        private void timer_updatePaint_Tick(object sender, EventArgs e)
+        {
+            this.Update();
         }
     }
 }

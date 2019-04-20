@@ -28,8 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.directoryEntry1 = new System.DirectoryServices.DirectoryEntry();
+            this.timer_updatePaint = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
+            // 
+            // timer_updatePaint
+            // 
+            this.timer_updatePaint.Tick += new System.EventHandler(this.timer_updatePaint_Tick);
             // 
             // LEDSimulate
             // 
@@ -39,6 +45,9 @@
             this.Name = "LEDSimulate";
             this.Text = "LEDSimulate";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LEDSimulate_FormClosing);
+            this.ResizeBegin += new System.EventHandler(this.LEDSimulate_ResizeBegin);
+            this.ResizeEnd += new System.EventHandler(this.LEDSimulate_ResizeEnd);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.LEDSimulate_Paint);
             this.ResumeLayout(false);
 
         }
@@ -46,5 +55,6 @@
         #endregion
 
         private System.DirectoryServices.DirectoryEntry directoryEntry1;
+        private System.Windows.Forms.Timer timer_updatePaint;
     }
 }

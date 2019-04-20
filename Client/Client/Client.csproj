@@ -58,6 +58,7 @@
     <Compile Include="LEDSimulate.Designer.cs">
       <DependentUpon>LEDSimulate.cs</DependentUpon>
     </Compile>
+    <Compile Include="PaintForm.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Section.cs" />
