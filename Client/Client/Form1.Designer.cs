@@ -36,16 +36,17 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.numeric_verticalLEDs = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.numeric_threads = new System.Windows.Forms.NumericUpDown();
             this.label_sizeOfPartition = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.numeric_horizontalLEDs = new System.Windows.Forms.NumericUpDown();
             this.button_start = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
-            this.numeric_threads = new System.Windows.Forms.NumericUpDown();
             this.toolTip2 = new System.Windows.Forms.ToolTip(this.components);
+            this.checkbox_UseAudio = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numeric_verticalLEDs)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numeric_horizontalLEDs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numeric_threads)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numeric_horizontalLEDs)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -116,6 +117,34 @@
             this.toolTip1.SetToolTip(this.label3, "How many LEDs you have at either the left or right side of your monitor. Do not c" +
         "ombine");
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(12, 60);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(69, 13);
+            this.label5.TabIndex = 10;
+            this.label5.Text = "Max Threads";
+            this.toolTip1.SetToolTip(this.label5, "For the best performance, match the number of cores to your CPU x2");
+            // 
+            // numeric_threads
+            // 
+            this.numeric_threads.Location = new System.Drawing.Point(104, 58);
+            this.numeric_threads.Minimum = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.numeric_threads.Name = "numeric_threads";
+            this.numeric_threads.Size = new System.Drawing.Size(74, 20);
+            this.numeric_threads.TabIndex = 3;
+            this.toolTip1.SetToolTip(this.numeric_threads, "For the best performance, match the number of cores to your CPU x2");
+            this.numeric_threads.Value = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            // 
             // label_sizeOfPartition
             // 
             this.label_sizeOfPartition.AutoSize = true;
@@ -164,39 +193,22 @@
             this.button_start.UseVisualStyleBackColor = true;
             this.button_start.Click += new System.EventHandler(this.button_start_Click);
             // 
-            // label5
+            // checkbox_UseAudio
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(12, 60);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(69, 13);
-            this.label5.TabIndex = 10;
-            this.label5.Text = "Max Threads";
-            this.toolTip1.SetToolTip(this.label5, "For the best performance, match the number of cores to your CPU x2");
-            // 
-            // numeric_threads
-            // 
-            this.numeric_threads.Location = new System.Drawing.Point(104, 58);
-            this.numeric_threads.Minimum = new decimal(new int[] {
-            4,
-            0,
-            0,
-            0});
-            this.numeric_threads.Name = "numeric_threads";
-            this.numeric_threads.Size = new System.Drawing.Size(74, 20);
-            this.numeric_threads.TabIndex = 3;
-            this.toolTip1.SetToolTip(this.numeric_threads, "For the best performance, match the number of cores to your CPU x2");
-            this.numeric_threads.Value = new decimal(new int[] {
-            4,
-            0,
-            0,
-            0});
+            this.checkbox_UseAudio.AutoSize = true;
+            this.checkbox_UseAudio.Location = new System.Drawing.Point(15, 168);
+            this.checkbox_UseAudio.Name = "checkbox_UseAudio";
+            this.checkbox_UseAudio.Size = new System.Drawing.Size(75, 17);
+            this.checkbox_UseAudio.TabIndex = 11;
+            this.checkbox_UseAudio.Text = "Use Audio";
+            this.checkbox_UseAudio.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(315, 232);
+            this.Controls.Add(this.checkbox_UseAudio);
             this.Controls.Add(this.numeric_threads);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.button_start);
@@ -213,8 +225,8 @@
             this.Name = "Form1";
             this.Text = "RGBoys";
             ((System.ComponentModel.ISupportInitialize)(this.numeric_verticalLEDs)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numeric_horizontalLEDs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numeric_threads)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numeric_horizontalLEDs)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -236,6 +248,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.NumericUpDown numeric_threads;
         private System.Windows.Forms.ToolTip toolTip2;
+        private System.Windows.Forms.CheckBox checkbox_UseAudio;
     }
 }
 

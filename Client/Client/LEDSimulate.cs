@@ -212,6 +212,8 @@ namespace Client
             }
         }
 
+        //Preserve the Alpha value, as ARGB only gets outputted once
+        int a = 255;
         private void ColorSection(Section s, string[] argb_arr, int index)
         {
             float r_width = (float)instance.Width / instance.formInst.prevScreen.Bounds.Width;
@@ -228,8 +230,7 @@ namespace Client
             //Changing values are based off s.isVert
 
             //Update
-            //Preserve the Alpha value, as ARGB only gets outputted once
-            int a = 255;
+            
             for (int i = 0; i < num_sections; i++)
             {
                 string [] argb = argb_arr[i].Split(' ');
@@ -302,6 +303,7 @@ namespace Client
 
         private void LEDSimulate_Paint(object sender, PaintEventArgs e)
         {
+            /*
             //Test drawing on bitmap first, then draw the bitmap
             Bitmap tmp = new Bitmap(instance.Width, instance.Height);
             using (Graphics g = Graphics.FromImage(tmp))
@@ -316,7 +318,17 @@ namespace Client
                     gfx.DrawImage(tmp, 0,0);
                 }
             }
-
+            */
+            using (var gfx = e.Graphics)
+            {
+                // Create solid brush.
+                foreach (PaintForm f in paintList)
+                {
+                    float r_width = instance.formInst.prevScreen.Bounds.Width / instance.Width;
+                    float r_height = instance.formInst.prevScreen.Bounds.Height / instance.Height;
+                    gfx.FillRectangle(f.p.Brush, f.x, f.y, f.width, f.height);
+                }
+            }
         }
 
         private void LEDSimulate_ResizeEnd(object sender, EventArgs e)
