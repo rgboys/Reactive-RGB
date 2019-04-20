@@ -10,14 +10,14 @@ namespace Client
 {
     class PaintForm
     {
-        public int x { get; set; }
-        public int y { get; set; }
-        public int width { get; set; }
-        public int height { get; set; }
+        public float x { get; set; }
+        public float y { get; set; }
+        public float width { get; set; }
+        public float height { get; set; }
 
         public Pen p { get; set; }
 
-        public PaintForm(Pen p, int x, int y, int width, int height)
+        public PaintForm(Pen p, float x, float y, float width, float height)
         {
             this.p = p;
             this.x = x;

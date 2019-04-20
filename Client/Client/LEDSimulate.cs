@@ -51,6 +51,9 @@ namespace Client
             InitializeComponent();
             instance = this;
             screen = new Bitmap(instance.Width, instance.Height);
+
+            SetStyle(ControlStyles.DoubleBuffer, true);
+
             this.TransparencyKey = (BackColor);
             this.sections = sections;
             this.procs = new List<Process>();
@@ -70,39 +73,128 @@ namespace Client
             }
 
             //initialize for all sections
-            for(int i = 0; i<numThreads; i++)
+            var t = new Task(() =>
             {
-                var t = new Task(() =>
-                {
-                    Section s = sections[i];
-                    var psi = new ProcessStartInfo();
-                    psi.FileName = pathPython;
+                Section s = sections[0];
+                var psi = new ProcessStartInfo();
+                psi.FileName = pathPython;
 
-                    var script = pathScript;
-                    int startX = s.x, startY = s.y, width = s.width, height = s.height;
+                var script = pathScript;
+                int startX = s.x, startY = s.y, width = s.width, height = s.height;
 
-                    int monitor = mon + 1;
-                    psi.Arguments = $"\"{script}\" \"{((s.useAudio) ? "1" : "-2")}\" \"{monitor}\" \"{startX}\" \"{startY}\" \"{width}\" \"{height}\" \"{i}\"  \"{s.subSections}\"";
+                int monitor = mon + 1;
+                psi.Arguments = $"\"{script}\" \"{((s.useAudio) ? "1" : "-2")}\" \"{monitor}\" \"{startX}\" \"{startY}\" \"{width}\" \"{height}\" \"{0}\"  \"{s.subSections}\"";
 
-                    psi.UseShellExecute = false;
-                    psi.CreateNoWindow = true;
-                    psi.RedirectStandardOutput = true;
-                    psi.RedirectStandardError = true;
+                psi.UseShellExecute = false;
+                psi.CreateNoWindow = true;
+                psi.RedirectStandardOutput = true;
+                psi.RedirectStandardError = true;
 
-                    Process p = new Process();
-                    p.OutputDataReceived += new DataReceivedEventHandler(proc_OutputDataReceived);
-                    p.ErrorDataReceived += new DataReceivedEventHandler(proc_ErrorDataReceived);
-                    p.StartInfo = psi;
-                    p.Start();
+                Process p = new Process();
+                p.OutputDataReceived += new DataReceivedEventHandler(proc_OutputDataReceived);
+                p.ErrorDataReceived += new DataReceivedEventHandler(proc_ErrorDataReceived);
+                p.StartInfo = psi;
+                p.Start();
 
-                    procs.Add(p);
-                    Console.WriteLine("Added process");
-                    p.BeginOutputReadLine();
-                    p.BeginErrorReadLine();
-                });
-                
-                t.Start();
-            }
+                procs.Add(p);
+                Console.WriteLine("Added process");
+                p.BeginOutputReadLine();
+                p.BeginErrorReadLine();
+            });
+
+            t.Start();
+            var t2 = new Task(() =>
+            {
+                Section s = sections[1];
+                var psi = new ProcessStartInfo();
+                psi.FileName = pathPython;
+
+                var script = pathScript;
+                int startX = s.x, startY = s.y, width = s.width, height = s.height;
+
+                int monitor = mon + 1;
+                psi.Arguments = $"\"{script}\" \"{((s.useAudio) ? "1" : "-2")}\" \"{monitor}\" \"{startX}\" \"{startY}\" \"{width}\" \"{height}\" \"{1}\"  \"{s.subSections}\"";
+
+                psi.UseShellExecute = false;
+                psi.CreateNoWindow = true;
+                psi.RedirectStandardOutput = true;
+                psi.RedirectStandardError = true;
+
+                Process p = new Process();
+                p.OutputDataReceived += new DataReceivedEventHandler(proc_OutputDataReceived);
+                p.ErrorDataReceived += new DataReceivedEventHandler(proc_ErrorDataReceived);
+                p.StartInfo = psi;
+                p.Start();
+
+                procs.Add(p);
+                Console.WriteLine("Added process");
+                p.BeginOutputReadLine();
+                p.BeginErrorReadLine();
+            });
+
+            t2.Start();
+
+            var t3 = new Task(() =>
+            {
+                Section s = sections[2];
+                var psi = new ProcessStartInfo();
+                psi.FileName = pathPython;
+
+                var script = pathScript;
+                int startX = s.x, startY = s.y, width = s.width, height = s.height;
+
+                int monitor = mon + 1;
+                psi.Arguments = $"\"{script}\" \"{((s.useAudio) ? "1" : "-2")}\" \"{monitor}\" \"{startX}\" \"{startY}\" \"{width}\" \"{height}\" \"{2}\"  \"{s.subSections}\"";
+
+                psi.UseShellExecute = false;
+                psi.CreateNoWindow = true;
+                psi.RedirectStandardOutput = true;
+                psi.RedirectStandardError = true;
+
+                Process p = new Process();
+                p.OutputDataReceived += new DataReceivedEventHandler(proc_OutputDataReceived);
+                p.ErrorDataReceived += new DataReceivedEventHandler(proc_ErrorDataReceived);
+                p.StartInfo = psi;
+                p.Start();
+
+                procs.Add(p);
+                Console.WriteLine("Added process");
+                p.BeginOutputReadLine();
+                p.BeginErrorReadLine();
+            });
+
+            t3.Start();
+
+            var t4 = new Task(() =>
+            {
+                Section s = sections[3];
+                var psi = new ProcessStartInfo();
+                psi.FileName = pathPython;
+
+                var script = pathScript;
+                int startX = s.x, startY = s.y, width = s.width, height = s.height;
+
+                int monitor = mon + 1;
+                psi.Arguments = $"\"{script}\" \"{((s.useAudio) ? "1" : "-2")}\" \"{monitor}\" \"{startX}\" \"{startY}\" \"{width}\" \"{height}\" \"{3}\"  \"{s.subSections}\"";
+
+                psi.UseShellExecute = false;
+                psi.CreateNoWindow = true;
+                psi.RedirectStandardOutput = true;
+                psi.RedirectStandardError = true;
+
+                Process p = new Process();
+                p.OutputDataReceived += new DataReceivedEventHandler(proc_OutputDataReceived);
+                p.ErrorDataReceived += new DataReceivedEventHandler(proc_ErrorDataReceived);
+                p.StartInfo = psi;
+                p.Start();
+
+                procs.Add(p);
+                Console.WriteLine("Added process");
+                p.BeginOutputReadLine();
+                p.BeginErrorReadLine();
+            });
+
+            t4.Start();
             Console.WriteLine("Finished adding and starting");
             timer_updatePaint.Start();
         }
@@ -126,31 +218,43 @@ namespace Client
 
         private void ColorSection(Section s, string[] argb_arr, int index)
         {
-            Graphics gr = this.CreateGraphics();
-
-            float r_width = instance.formInst.prevScreen.Bounds.Width / instance.Width;
-            float r_height = instance.formInst.prevScreen.Bounds.Height / instance.Height;
+            float r_width = (float)instance.Width / instance.formInst.prevScreen.Bounds.Width;
+            float r_height = (float)instance.Height / instance.formInst.prevScreen.Bounds.Height;
             int num_sections = argb_arr.Length;
-            int pixelsPerSection = (int)((s.isVert) ? ((s.height / num_sections) / r_height) : ((s.width / num_sections) / r_width));
-            int currX = (int)(s.x / r_width);
-            int currY = (int)(s.y / r_height);
+            float pixelsPerSection = (float)((s.isVert) ? (float)((s.height / num_sections) * r_height) : (float)((s.width / num_sections) * r_width));
+            float currX = (float)(s.x * r_width);
+            float currY = (float)(s.y * r_height);
+            if(index == 0)
+            {
+                Console.WriteLine(currX + " " + currY + " " + pixelsPerSection + " " + instance.Width + " " + instance.formInst.prevScreen.Bounds.Width);
+            }
 
             //Changing values are based off s.isVert
 
             //Update
-            //instance.BackColor = Color.FromArgb(r, g, b);
-            //Console.WriteLine(string.Format("ARGB: argb({0}, {1}, {2}, {3})", a, r, g, b));
+            //Preserve the Alpha value, as ARGB only gets outputted once
+            int a = 255;
             for (int i = 0; i < num_sections; i++)
             {
                 string [] argb = argb_arr[i].Split(' ');
-                int a = 255, r = 0, g = 0, b = 0;
+                int r = 0, g = 0, b = 0;
 
                 if (s.useAudio)
                 {
-                    a = Int32.Parse(argb[0]);
-                    r = Int32.Parse(argb[1]);
-                    g = Int32.Parse(argb[2]);
-                    b = Int32.Parse(argb[3]);
+                    //Only the first ARGB  output will contain sound, the rest is only RGB in the string
+                    if(i == 0)
+                    {
+                        a = Int32.Parse(argb[0]);
+                        r = Int32.Parse(argb[1]);
+                        g = Int32.Parse(argb[2]);
+                        b = Int32.Parse(argb[3]);
+                    }
+                    else
+                    {
+                        r = Int32.Parse(argb[0]);
+                        g = Int32.Parse(argb[1]);
+                        b = Int32.Parse(argb[2]);
+                    }
                 }
                 else
                 {
@@ -166,7 +270,7 @@ namespace Client
                     tp.p = p;
                     tp.x = currX;
                     tp.y = currY;
-                    tp.width = s.width;
+                    tp.width = s.width * r_width;
                     tp.height = currY + pixelsPerSection;
 
                     currY += pixelsPerSection;
@@ -177,7 +281,7 @@ namespace Client
                     tp.x = currX;
                     tp.y = currY;
                     tp.width = currX + pixelsPerSection;
-                    tp.height = s.height;
+                    tp.height = s.height * r_height;
 
                     currX += pixelsPerSection;
                 }
@@ -198,18 +302,22 @@ namespace Client
             }
             formInst.button_flag = false;
         }
-        
+
 
         private void LEDSimulate_Paint(object sender, PaintEventArgs e)
         {
-            using (var gfx = e.Graphics)
+            //Test drawing on bitmap first, then draw the bitmap
+            Bitmap tmp = new Bitmap(instance.Width, instance.Height);
+            using (Graphics g = Graphics.FromImage(tmp))
             {
                 // Create solid brush.
-                foreach(PaintForm f in paintList)
+                foreach (PaintForm f in paintList)
                 {
-                    float r_width = instance.formInst.prevScreen.Bounds.Width / instance.Width;
-                    float r_height = instance.formInst.prevScreen.Bounds.Height / instance.Height;
-                    gfx.FillRectangle(f.p.Brush, f.x, f.y, f.width, f.height);
+                    g.FillRectangle(f.p.Brush, f.x, f.y, f.width, f.height);
+                }
+                using (var gfx = e.Graphics)
+                {
+                    gfx.DrawImage(tmp, 0,0);
                 }
             }
 
@@ -218,19 +326,16 @@ namespace Client
         private void LEDSimulate_ResizeEnd(object sender, EventArgs e)
         {
             Invalidate();
-            this.Update();
         }
 
         private void LEDSimulate_ResizeBegin(object sender, EventArgs e)
         {
             Invalidate();
-            this.Update();
         }
 
         private void timer_updatePaint_Tick(object sender, EventArgs e)
         {
-            this.Invalidate();
-            this.Update();
+            this.Refresh();
         }
     }
 }
