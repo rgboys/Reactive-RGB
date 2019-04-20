@@ -33,11 +33,40 @@ namespace Client
 
             this.formInst = formInst;
             g = instance.CreateGraphics();
-
+            Console.WriteLine(sections.Count);
             //initialize for all sections
             for(int i = 0; i<numThreads; i++)
             {
                 var t = new Task(() =>
+                {
+                    Section s = sections[i];
+                    var psi = new ProcessStartInfo();
+                    psi.FileName = pathPython;
+
+                    var script = pathScript;
+                    int startX = s.x, startY = s.y, width = s.width, height = s.height;
+
+                    int monitor = mon + 1;
+                    psi.Arguments = $"\"{script}\" \"{"1"}\" \"{monitor}\" \"{startX}\" \"{startY}\" \"{width}\" \"{height}\" \"{i}\"  \"{20}\"";
+
+                    psi.UseShellExecute = false;
+                    psi.CreateNoWindow = true;
+                    psi.RedirectStandardOutput = true;
+                    psi.RedirectStandardError = true;
+
+                    Process p = new Process();
+                    p.OutputDataReceived += new DataReceivedEventHandler(proc_OutputDataReceived);
+                    p.ErrorDataReceived += new DataReceivedEventHandler(proc_ErrorDataReceived);
+                    p.StartInfo = psi;
+                    p.Start();
+
+                    procs.Add(p);
+                    Console.WriteLine("Added process");
+                    p.BeginOutputReadLine();
+                    p.BeginErrorReadLine();
+                });
+
+                /*var t = new Task(() =>
                 {
                     for(int j = 0+(i*numThreads); j<Math.Ceiling((double)sections.Count/numThreads); j++)
                     {
@@ -63,13 +92,14 @@ namespace Client
                         p.Start();
 
                         procs.Add(p);
-
+                        Console.WriteLine("Added process");
                         p.BeginOutputReadLine();
                         p.BeginErrorReadLine();
                     }
-                });
+                });*/
                 t.Start();
             }
+            Console.WriteLine("Finished adding and starting");
         }
 
         static void proc_ErrorDataReceived(object sender, DataReceivedEventArgs e)
@@ -82,6 +112,7 @@ namespace Client
         {
             if (!string.IsNullOrEmpty(e.Data))
             {
+                Console.WriteLine("herea");
                 string[] argb_init = e.Data.Split(new string[] { "--" }, StringSplitOptions.None);
                 int index = Int32.Parse(argb_init[1]);
                 Section s = instance.sections[index];
@@ -91,6 +122,7 @@ namespace Client
 
         private static void ColorSection(Section s, string[] argb_arr)
         {
+            Console.WriteLine("here");
             int num_sections = argb_arr.Length;
             int pixelsPerSection = (s.isVert) ? (s.height / num_sections) : (s.width / num_sections);
             int currX = s.x;
