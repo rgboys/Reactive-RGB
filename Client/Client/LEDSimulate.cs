@@ -44,15 +44,11 @@ namespace Client
 
         //Requires this instance just in case the user closes from the form instead of hitting the 'stop' button on the main form
         private Form1 formInst;
-        Bitmap screen;
 
         public LEDSimulate(string pathScript, string pathPython, Form1 formInst, List<Section> sections, int mon, int numThreads)
         {
             InitializeComponent();
             instance = this;
-            screen = new Bitmap(instance.Width, instance.Height);
-
-            SetStyle(ControlStyles.DoubleBuffer, true);
 
             this.TransparencyKey = (BackColor);
             this.sections = sections;
@@ -336,6 +332,16 @@ namespace Client
         private void timer_updatePaint_Tick(object sender, EventArgs e)
         {
             this.Refresh();
+        }
+
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
+                return cp;
+            }
         }
     }
 }
