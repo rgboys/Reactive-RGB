@@ -97,26 +97,45 @@ with mss() as sct:
 			"height": HEIGHT,
 			"mon": MONITOR_NUMBER
 		}
-		
+		isVert = True if WIDTH == 100 else False
+
+		pixels_per_subsection = 0
+		if isVert:
+			pixels_per_subsection = int(HEIGHT / SUB_SECTION_COUNT)
+		else:
+			pixels_per_subsection = int(WIDTH / SUB_SECTION_COUNT)
+
 		# Continuously loop until process is killed
 		while True:
 			image_output = 'image_in_sec_' + SECTION_IND + '_.png'.format(**monitor)
 			im = sct.grab(monitor)
-			raw = MSSTools.to_png(im.rgb, im.size, output=image_output)
+			raw = MSSTools.to_png(im.rgb, im.size)
 			#Split image into equal sections
-			sub_sections = slicer.slice(image_output, SUB_SECTION_COUNT)
-			print(len(sub_sections))
-			break
+			img = Image.open(io.BytesIO(raw))
+			sub_sections = []
+			curr_x = X_COORD
+			curr_y = Y_COORD
+			for i in np.arange(SUB_SECTION_COUNT):
+				area = (curr_x, curr_y, curr_x + pixels_per_subsection, curr_y + pixels_per_subsection)
+				sub_sections.append(img.crop(area))
+				if isVert:
+					curr_y += pixels_per_subsection + 1
+				else:
+					curr_x += pixels_per_subsection + 1
 
 			rgb = ''
 			for i in np.arange(SUB_SECTION_COUNT):
 				sub_section_image = sub_sections[i]
-				nparr = np.frombuffer(sub_section_image, np.uint8)
+				raw = io.BytesIO()
+				sub_section_image.save(raw, format='PNG')
+				raw = raw.getvalue()
+				nparr = np.frombuffer(raw, np.uint8)
 				cimg = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 				avg_per_row = np.average(cimg, axis=0)
 				avg = np.average(avg_per_row, axis=0)
-				rgb +=  str(int(avg[2])) + ' ' + str(int(avg[1])) + ' ' + str(int(avg[0]))
-			
+				rgb +=  str(int(avg[2])) + ' ' + str(int(avg[1])) + ' ' + str(int(avg[0])) + '|'
+			#get rid of extranneous pipe char
+			rgb = rgb[:-1]
 			#print('Runtime: ' + str(time.time()-start))
 			#time.sleep(1)
 
