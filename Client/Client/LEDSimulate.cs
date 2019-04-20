@@ -218,15 +218,18 @@ namespace Client
         private void LEDSimulate_ResizeEnd(object sender, EventArgs e)
         {
             Invalidate();
+            this.Update();
         }
 
         private void LEDSimulate_ResizeBegin(object sender, EventArgs e)
         {
             Invalidate();
+            this.Update();
         }
 
         private void timer_updatePaint_Tick(object sender, EventArgs e)
         {
+            this.Invalidate();
             this.Update();
         }
     }

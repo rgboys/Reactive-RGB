@@ -108,9 +108,9 @@ namespace Client
 
                 List<Section> sections = new List<Section>();
                 sections.Add(new Section(0, 0, prevScreen.Bounds.Width, 100, true, false, Int32.Parse(numeric_horizontalLEDs.Value.ToString()))); //Top
-                //sections.Add(new Section(0, prevScreen.Bounds.Height - 100, prevScreen.Bounds.Width, 100, false, false, Int32.Parse(numeric_horizontalLEDs.Value.ToString()))); //Bottom
-                //sections.Add(new Section(0, 0, 100, prevScreen.Bounds.Height, false, true, Int32.Parse(numeric_verticalLEDs.Value.ToString()))); //Left
-                //sections.Add(new Section(prevScreen.Bounds.Width - 100, 0, 100, prevScreen.Bounds.Height, false, true, Int32.Parse(numeric_verticalLEDs.Value.ToString())));//  Right
+                sections.Add(new Section(0, prevScreen.Bounds.Height - 100, prevScreen.Bounds.Width, 100, false, false, Int32.Parse(numeric_horizontalLEDs.Value.ToString()))); //Bottom
+                sections.Add(new Section(0, 0, 100, prevScreen.Bounds.Height, false, true, Int32.Parse(numeric_verticalLEDs.Value.ToString()))); //Left
+                sections.Add(new Section(prevScreen.Bounds.Width - 100, 0, 100, prevScreen.Bounds.Height, false, true, Int32.Parse(numeric_verticalLEDs.Value.ToString())));//  Right
 
                 /* Rather than defining sections as the points of their LEDs, we're going to define a section based on the number of available threads
                  * In this case, it'll be 4 | each thread being responsible for NSEW
