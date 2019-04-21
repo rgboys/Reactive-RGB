@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.directoryEntry1 = new System.DirectoryServices.DirectoryEntry();
             this.timer_updatePaint = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
@@ -53,8 +52,6 @@
         }
 
         #endregion
-
-        private System.DirectoryServices.DirectoryEntry directoryEntry1;
         private System.Windows.Forms.Timer timer_updatePaint;
     }
 }

@@ -110,6 +110,11 @@ with mss() as sct:
 			image_output = 'image_in_sec_' + SECTION_IND + '_.png'.format(**monitor)
 			im = sct.grab(monitor)
 			raw = MSSTools.to_png(im.rgb, im.size)
+
+			b = Image.open(io.BytesIO(raw))
+			b.show()
+			break
+
 			#Split image into equal sections
 			img = Image.open(io.BytesIO(raw))
 			sub_sections = []
@@ -119,9 +124,9 @@ with mss() as sct:
 				area = (curr_x, curr_y, curr_x + pixels_per_subsection, curr_y + pixels_per_subsection)
 				sub_sections.append(img.crop(area))
 				if isVert:
-					curr_y += pixels_per_subsection + 1
+					curr_y += pixels_per_subsection
 				else:
-					curr_x += pixels_per_subsection + 1
+					curr_x += pixels_per_subsection
 
 			rgb = ''
 			for i in np.arange(SUB_SECTION_COUNT):
@@ -149,11 +154,6 @@ with mss() as sct:
 				print(rgb + '--' + SECTION_IND)
 		
 			sys.stdout.flush()
-
-			
-			#b = Image.open(io.BytesIO(raw))
-			#b.show()
-			#break
 stream.stop_stream()
 stream.close()
 p.terminate()

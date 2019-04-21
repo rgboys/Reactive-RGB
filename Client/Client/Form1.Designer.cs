@@ -221,6 +221,7 @@
             this.Controls.Add(this.link_previewMonitor);
             this.Controls.Add(this.combo_monitor);
             this.Controls.Add(this.label1);
+            this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "Form1";
             this.Text = "RGBoys";

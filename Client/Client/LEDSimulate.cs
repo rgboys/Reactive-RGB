@@ -169,8 +169,10 @@ namespace Client
 
                 var script = pathScript;
                 int startX = s.x, startY = s.y, width = s.width, height = s.height;
-
                 int monitor = mon + 1;
+
+                Console.WriteLine($"\"{script}\" \"{((s.useAudio) ? "1" : "-2")}\" \"{monitor}\" \"{startX}\" \"{startY}\" \"{width}\" \"{height}\" \"{3}\"  \"{s.subSections}\"");
+
                 psi.Arguments = $"\"{script}\" \"{((s.useAudio) ? "1" : "-2")}\" \"{monitor}\" \"{startX}\" \"{startY}\" \"{width}\" \"{height}\" \"{3}\"  \"{s.subSections}\"";
 
                 psi.UseShellExecute = false;
@@ -303,7 +305,7 @@ namespace Client
 
         private void LEDSimulate_Paint(object sender, PaintEventArgs e)
         {
-            /*
+            
             //Test drawing on bitmap first, then draw the bitmap
             Bitmap tmp = new Bitmap(instance.Width, instance.Height);
             using (Graphics g = Graphics.FromImage(tmp))
@@ -318,17 +320,7 @@ namespace Client
                     gfx.DrawImage(tmp, 0,0);
                 }
             }
-            */
-            using (var gfx = e.Graphics)
-            {
-                // Create solid brush.
-                foreach (PaintForm f in paintList)
-                {
-                    float r_width = instance.formInst.prevScreen.Bounds.Width / instance.Width;
-                    float r_height = instance.formInst.prevScreen.Bounds.Height / instance.Height;
-                    gfx.FillRectangle(f.p.Brush, f.x, f.y, f.width, f.height);
-                }
-            }
+            
         }
 
         private void LEDSimulate_ResizeEnd(object sender, EventArgs e)
