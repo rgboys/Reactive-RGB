@@ -24,7 +24,8 @@ import image_slicer as slicer
 # arg[8] = How many subsections we need to split and calculate dominant RGB for within the section index (for optimization) (sections.Count)
 #
 # Example execution for the top left of Monitor 1, with a 200x200 box:
-# py -3.6 .\clientcapture.py 1 1 0 0 1920 200 0 20 -- Example of capturing a 1920x1080 monitor with 20 subsections
+# py -3.6 .\clientcapture.py 1 1 0 0 1920 200 0 20 -- Example of capturing a 1920x1080 monitor with 20 subsections (this is testing TOP)
+#  py -3.6 .\clientcapture.py 1 1 1820 0 100 1080 3 15 -- Example of capturing a 1920x1080 monitor with 15 subsections (this is testing RIGHT)
 # Example of section for testing monitor 1 (with open image)
 # py -3.6 .\clientcapture.py 0 1
 # ##############################################################
@@ -111,21 +112,23 @@ with mss() as sct:
 			im = sct.grab(monitor)
 			raw = MSSTools.to_png(im.rgb, im.size)
 
-			b = Image.open(io.BytesIO(raw))
-			b.show()
-			break
+			#b = Image.open(io.BytesIO(raw))
+			#b.show()
+			#break
 
 			#Split image into equal sections
 			img = Image.open(io.BytesIO(raw))
 			sub_sections = []
-			curr_x = X_COORD
-			curr_y = Y_COORD
+			curr_x = 0
+			curr_y = 0
 			for i in np.arange(SUB_SECTION_COUNT):
-				area = (curr_x, curr_y, curr_x + pixels_per_subsection, curr_y + pixels_per_subsection)
-				sub_sections.append(img.crop(area))
 				if isVert:
+					area = (curr_x, curr_y, WIDTH, curr_y + pixels_per_subsection)
+					sub_sections.append(img.crop(area))
 					curr_y += pixels_per_subsection
 				else:
+					area = (curr_x, curr_y, curr_x + pixels_per_subsection, HEIGHT)
+					sub_sections.append(img.crop(area))
 					curr_x += pixels_per_subsection
 
 			rgb = ''
