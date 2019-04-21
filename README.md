@@ -2,7 +2,11 @@
 
 ## What is it?
 
-A reactive backlighting solution for a display. 
+A piece of software that makes color LEDs on the back of your display reactive to what you are doing.
+
+The software is reactive to two things 
+- Display
+- Audio
 
 ## What can it do?
 
