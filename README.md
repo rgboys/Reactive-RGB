@@ -14,7 +14,7 @@ The software is reactive to two things
 
 This application can control the RGB lights on the back of your monitor so they display colors that match the display. 
 
-![Example Image](./Images/example_led.png)
+<img src="./Images/example_led.png" alt="drawing" width="400"/>
 
 ### Sound Reactivity
 
@@ -26,17 +26,20 @@ This application can also modulate your LEDs based on the currently playing audi
 
 By monitoring the content displayed on a monitor border, we select colors for a strip of RGB LEDs placed on the back of the display.
 
-![Display Reactivity](./Images/display_reactivity.png)
+<img src="./Images/display_reactivity.png" alt="drawing" width="500"/>
+
 
 ### Sound Reactivity 
 
 By reading pitch and volume data from your microphone intensity and hue of LED strip colors can be modulated. 
 
-![Sound Reactivity](./Images/sound_reactivity.png)
+
+<img src="./Images/sound_reactivity.png" alt="drawing" width="500"/>
+
 
 ### Hardware Configuration
 
-![Hardware Configuration](./Images/hardware_conf.png)
+<img src="./Images/hardware_conf.png" alt="drawing" width="700"/>
 
 ## Installation
 
