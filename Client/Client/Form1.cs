@@ -15,10 +15,12 @@ namespace Client
 {
     public partial class Form1 : Form
     {
+        public static bool init = false;
+
         private static string pathPython = @"C:\Users\lichc\AppData\Local\Programs\Python\Python36\python.exe";
         private static string pathScript = @"C:\Users\lichc\Desktop\ReactiveRGB\Reactive-RGB\Python\ClientCapture\clientcapture.py";
 
-        private Screen prevScreen;
+        public Screen prevScreen;
         private Screen[] screens;
 
         private LEDSimulate dial;
@@ -33,11 +35,9 @@ namespace Client
         public Form1()
         {
             InitializeComponent();
+            init = true;
 
             this.formInst = this;
-
-            SetStyle(ControlStyles.SupportsTransparentBackColor, true);
-            this.BackColor = Color.Transparent;
 
             Directory.CreateDirectory(Path.GetTempPath() + "\\RGBoys\\Client");
             screens = Screen.AllScreens;
@@ -95,50 +95,12 @@ namespace Client
             {
                 int numThreads = Int32.Parse(numeric_threads.Value.ToString());
 
-                //Width per section
-                int bottom_widthPerSection = (prevScreen.Bounds.Width / Int32.Parse(numeric_horizontalLEDs.Value.ToString()));
-                int left_widthPerSection = (prevScreen.Bounds.Height / Int32.Parse(numeric_verticalLEDs.Value.ToString()));
-
-                //Number of sections
-                int bottom_numSections = prevScreen.Bounds.Width / bottom_widthPerSection;
-                int left_numSections = prevScreen.Bounds.Height / left_widthPerSection;
-
-                int inc = 0;
-
+                
                 List<Section> sections = new List<Section>();
-
-                //Get for top of monitor
-                for (int i = 0; i < bottom_numSections; i++)
-                {
-                    sections.Add(new Section(inc, 0, bottom_widthPerSection, 100, bottom_widthPerSection / prevScreen.Bounds.Width, 100 / prevScreen.Bounds.Height, false));
-                    inc += bottom_widthPerSection;
-                }
-                inc = 0;
-
-                //Get for bottom of monitor
-                for (int i = 0; i < bottom_numSections; i++)
-                {
-                    sections.Add(new Section(inc, prevScreen.Bounds.Height-100, bottom_widthPerSection, 100, bottom_widthPerSection / prevScreen.Bounds.Width, 100 / prevScreen.Bounds.Height, false));
-                    inc += bottom_widthPerSection;
-                }
-                inc = 0;
-
-                //Get for left of monitor
-                for (int i = 0; i < left_numSections; i++)
-                {
-                    sections.Add(new Section(0, inc, 100, left_widthPerSection, 100 / prevScreen.Bounds.Width, left_widthPerSection / prevScreen.Bounds.Height, true));
-                    inc += left_widthPerSection;
-                }
-                inc = 0;
-
-                //Get for right of monitor
-                for (int i = 0; i < left_numSections; i++)
-                {
-                    sections.Add(new Section(prevScreen.Bounds.Width-100, inc, 100, left_widthPerSection, 100 / prevScreen.Bounds.Width, left_widthPerSection / prevScreen.Bounds.Height, true));
-                    inc += left_widthPerSection;
-                }
-                inc = 0;
-
+                sections.Add(new Section(0, 0, prevScreen.Bounds.Width, 100, checkbox_UseAudio.Checked, false, Int32.Parse(numeric_horizontalLEDs.Value.ToString()))); //Top
+                sections.Add(new Section(0, prevScreen.Bounds.Height - 100, prevScreen.Bounds.Width, 100, false, false, Int32.Parse(numeric_horizontalLEDs.Value.ToString()))); //Bottom
+                sections.Add(new Section(0, 0, 100, prevScreen.Bounds.Height, false, true, Int32.Parse(numeric_verticalLEDs.Value.ToString()))); //Left
+                sections.Add(new Section(prevScreen.Bounds.Width - 100, 0, 100, prevScreen.Bounds.Height, false, true, Int32.Parse(numeric_verticalLEDs.Value.ToString())));//  Right
                 dial = new LEDSimulate(pathScript, pathPython, formInst, sections, combo_monitor.SelectedIndex, numThreads);
                 dial.Show();
             }
