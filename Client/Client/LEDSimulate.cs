@@ -48,6 +48,11 @@ namespace Client
         public LEDSimulate(string pathScript, string pathPython, Form1 formInst, List<Section> sections, int mon, int numThreads)
         {
             InitializeComponent();
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            SetStyle(ControlStyles.ResizeRedraw, true);
+            SetStyle(ControlStyles.UserPaint, true);
+            DoubleBuffered = true;
             instance = this;
 
             this.TransparencyKey = (BackColor);
@@ -315,10 +320,8 @@ namespace Client
                 {
                     g.FillRectangle(f.p.Brush, f.x, f.y, f.width, f.height);
                 }
-                using (var gfx = e.Graphics)
-                {
-                    gfx.DrawImage(tmp, 0,0);
-                }
+                var gfx = e.Graphics;
+                gfx.DrawImage(tmp, 0, 0);
             }
             
         }
