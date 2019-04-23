@@ -43,8 +43,8 @@ By reading pitch and volume data from your microphone intensity and hue of LED s
 
 ### Important Note Before Trying it Out Yourself
 
-Although the software is capable of extracting the data needed for LEDs, the software for the Arduino has not been completed. 
-Therefore, instead this repository bundles a simulation of the LEDs. 
+Although the software is capable of extracting the data needed for LEDs, the software for the Arduino has **not** been completed. 
+Instead, this repository bundles a simulation of the LEDs. 
 
 ## Installation
 
