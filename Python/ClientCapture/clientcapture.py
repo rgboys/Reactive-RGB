@@ -9,7 +9,6 @@ import cv2
 import pyaudio
 import aubio
 import numpy as np
-import image_slicer as slicer
 
 
 # ##############################################################

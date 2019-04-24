@@ -50,7 +50,7 @@ Instead, this repository bundles a simulation of the LEDs.
 
 ### Software Requirements
 
-- [Python3](https://www.python.org/downloads/) 
+- [Python 3.6](https://www.python.org/downloads/) 
 - Python Modules
   - [PyAudio Python Module](https://people.csail.mit.edu/hubert/pyaudio/)
   - [Aubio](https://github.com/aubio/aubio)
@@ -58,8 +58,9 @@ Instead, this repository bundles a simulation of the LEDs.
   - [PIL](https://pythonware.com/products/pil/)
   - [CV2](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_setup/py_table_of_contents_setup/py_table_of_contents_setup.html)
   - [numpy](https://www.scipy.org/install.html)
-  -[image_slicer](https://pypi.org/project/image_slicer/)
+  
 - C#
+  - .NET Framework 3.0+
 
 ### Hardware Requirements 
 
@@ -79,5 +80,7 @@ Instead, this repository bundles a simulation of the LEDs.
 
 ## Installation
 
-
-
+- Within Form1.cs, replace pathPython and pathScript with your python.exe and clientcapture.py paths
+- In runtime, the numeric boxes representing the number of Vertical and Horizontal LEDs is a representation of just one side of the monitor, not combined (64 total LEDs placed vertically, means 32 on each side, the inputted number should be 32 in the Vertical box)
+- For multiple monitor displays, use the "Preview Monitor" option to view what the selected monitor is
+- Press "Start" to begin
