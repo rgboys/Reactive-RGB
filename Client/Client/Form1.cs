@@ -83,6 +83,7 @@ namespace Client
             Console.WriteLine(results);
         }
 
+        //Sets prevScreen to whatever is selected to keep track of active monitor index
         private void combo_monitor_SelectedIndexChanged(object sender, EventArgs e)
         {
             prevScreen = screens[combo_monitor.SelectedIndex];
@@ -112,6 +113,7 @@ namespace Client
             }
         }
 
+        //Used to keep track of Start and Stop button
         public bool toggleButton()
         {
             button_startIndicator = !button_startIndicator;

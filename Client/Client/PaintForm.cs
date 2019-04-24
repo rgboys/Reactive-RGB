@@ -8,6 +8,9 @@ using System.Windows.Forms;
 
 namespace Client
 {
+    /// <summary>
+    /// PaintForm describes an individual subsection's color, and rect coordinates/size
+    /// </summary>
     class PaintForm
     {
         public float x { get; set; }

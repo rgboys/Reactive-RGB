@@ -45,6 +45,15 @@ namespace Client
         //Requires this instance just in case the user closes from the form instead of hitting the 'stop' button on the main form
         private Form1 formInst;
 
+        /// <summary>
+        /// Generates form for simulating LEDs async
+        /// </summary>
+        /// <param name="pathScript">Path to python script</param>
+        /// <param name="pathPython">Path to python.exe</param>
+        /// <param name="formInst">Instance of the main form</param>
+        /// <param name="sections">Number of parent sections</param>
+        /// <param name="mon">Monitor index number</param>
+        /// <param name="numThreads">Number of threads to use (dep)</param>
         public LEDSimulate(string pathScript, string pathPython, Form1 formInst, List<Section> sections, int mon, int numThreads)
         {
             InitializeComponent();
@@ -202,12 +211,22 @@ namespace Client
             timer_updatePaint.Start();
         }
 
+
+        /// <summary>
+        /// Output error from python script
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         static void proc_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
             Console.WriteLine("Error: {0}", e.Data);
         }
 
-
+        /// <summary>
+        /// Data received from python script (ARGB values + index of section)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         static void proc_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             if (!string.IsNullOrEmpty(e.Data))
@@ -221,6 +240,12 @@ namespace Client
 
         //Preserve the Alpha value, as ARGB only gets outputted once
         int a = 255;
+        /// <summary>
+        /// Color every subsection from parent section
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="argb_arr"></param>
+        /// <param name="index"></param>
         private void ColorSection(Section s, string[] argb_arr, int index)
         {
             float r_width = (float)instance.Width / instance.formInst.prevScreen.Bounds.Width;
@@ -307,7 +332,7 @@ namespace Client
             formInst.button_flag = false;
         }
 
-
+        //Refresh paint all subsections
         private void LEDSimulate_Paint(object sender, PaintEventArgs e)
         {
             
@@ -326,21 +351,25 @@ namespace Client
             
         }
 
+        //Invalidate current paint and repaint on next frame when resizing form
         private void LEDSimulate_ResizeEnd(object sender, EventArgs e)
         {
             Invalidate();
         }
 
+        //Invalidate current paint and repaint on next frame when resizing form
         private void LEDSimulate_ResizeBegin(object sender, EventArgs e)
         {
             Invalidate();
         }
 
+        //Per tick (30fps), refresh screen
         private void timer_updatePaint_Tick(object sender, EventArgs e)
         {
             this.Refresh();
         }
 
+        //Override default buffer style on form level to reduce flickering
         protected override CreateParams CreateParams
         {
             get
