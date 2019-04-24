@@ -31,7 +31,7 @@ By monitoring the content displayed on a monitor border, we select colors for a 
 
 ### Sound Reactivity 
 
-By reading pitch and volume data from your microphone intensity and hue of LED strip colors can be modulated. 
+By reading pitch and volume data from your microphone, intensity and hue of LED strip colors can be modulated. 
 
 
 <img src="./Images/sound_reactivity.png" alt="drawing" width="500"/>
