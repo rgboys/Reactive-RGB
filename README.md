@@ -46,7 +46,7 @@ By reading pitch and volume data from your microphone intensity and hue of LED s
 Although the software is capable of extracting the data needed for LEDs, the software for the Arduino has **not** been completed. 
 Instead, this repository bundles a simulation of the LEDs. 
 
-## Installation
+## Requirements
 
 ### Software Requirements
 
@@ -55,4 +55,25 @@ Instead, this repository bundles a simulation of the LEDs.
   - [PyAudio Python Module](https://people.csail.mit.edu/hubert/pyaudio/)
   - [Aubio](https://github.com/aubio/aubio)
   - [mss](https://python-mss.readthedocs.io/installation.html)
+  - [PIL](https://pythonware.com/products/pil/)
+  - [CV2](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_setup/py_table_of_contents_setup/py_table_of_contents_setup.html)
   - [numpy](https://www.scipy.org/install.html)
+  -[image_slicer](https://pypi.org/project/image_slicer/)
+- C#
+
+### Hardware Requirements 
+
+QuadCore Processor @ 3 Ghz
+Memory: 8 GB RAM
+Microphone Input
+
+### Recommended Hardware 
+
+Processor (AMD): AMD Ryzen 3 1300X
+Processor (Intel): Intel Core i7 4790 or equivalent
+Memory: 12 GB RAM
+
+## Installation
+
+
+
