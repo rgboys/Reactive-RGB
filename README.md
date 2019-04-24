@@ -64,13 +64,17 @@ Instead, this repository bundles a simulation of the LEDs.
 ### Hardware Requirements 
 
 QuadCore Processor @ 3 Ghz
+
 Memory: 8 GB RAM
+
 Microphone Input
 
 ### Recommended Hardware 
 
 Processor (AMD): AMD Ryzen 3 1300X
+
 Processor (Intel): Intel Core i7 4790 or equivalent
+
 Memory: 12 GB RAM
 
 ## Installation
