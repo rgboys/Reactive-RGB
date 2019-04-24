@@ -14,7 +14,7 @@ The software is reactive to two things
 
 This application can control the RGB lights on the back of your monitor so they display colors that match the display. 
 
-<img src="./Images/example_led.png" alt="drawing" width="400"/>
+<img src="./Images/example_led.png" alt="drawing" width="600"/>
 
 ### Sound Reactivity
 
