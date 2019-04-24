@@ -1,4 +1,4 @@
-# Reactive-RGB
+# Reactive-RGB LED Backlighting
 
 ## What is it?
 
