@@ -81,6 +81,7 @@ Instead, this repository bundles a simulation of the LEDs.
 ## Installation
 - Clone the repository
 - Within Form1.cs, replace pathPython and pathScript with your python.exe and clientcapture.py paths
+- Run the application in Visual Studio
 - In runtime, the numeric boxes representing the number of Vertical and Horizontal LEDs is a representation of just one side of the monitor, not combined. For example, 64 total LEDs placed vertically, means 32 on each side, so the inputted number should be 32 in the Vertical box.
 - For multiple monitor displays, use the "Preview Monitor" option to view what the selected monitor is
 - Press "Start" to begin
